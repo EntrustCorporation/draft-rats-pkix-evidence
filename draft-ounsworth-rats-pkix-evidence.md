@@ -3,7 +3,7 @@ title: PKI-based Attestation Evidence
 abbrev: PKI-based Attestation Evidence
 docname: draft-ounsworth-rats-attestation-evidence-latest
 category: std
-updates: 7925
+updates: 7925 <-- Why? -->
 consensus: true
 submissiontype: IETF
 
@@ -150,11 +150,15 @@ with a digital signature.
 
 ~~~ asn.1
 PkixEvidenceStatement ::= SEQUENCE {
-  version INTEGER,
-  claims SET SIZE (1..MAX) OF EvidenceClaim,
-  signatureInfos SEQUENCE SIZE (1..MAX) OF SignatureInfo,
+  tbsEvidence TBSEvidenceStatement
   signatureValues SEQUENCE SIZE (1..MAX) OF BIT STRING,
-  relatedCertificates [0] IMPLICIT SEQUENCE of Certificate OPTIONAL
+}
+
+TBSEvidenceStatement ::= SEQUENCE {
+  version INTEGER,
+  claims SET SIZE (1..MAX) OF EVIDENCE-CLAIM,
+  signatureInfos SEQUENCE SIZE (1..MAX) OF SignatureInfo
+    relatedCertificates [0] IMPLICIT SEQUENCE of Certificate OPTIONAL
     -- As defined in RFC 5280
 }
 
@@ -203,32 +207,28 @@ Crypto4A has already used?
 
 ## Signing Procedure
 
-1. The message to be signed is the `PkixEvidenceStatement` with an empty
-`signatureValues`; i.e. where `signatureValues` is a SEQUENCE of size 0.
+1. The message to be signed is the `TBSEvidenceStatement`, including the `SignatureInfo` for each of the signatures to be performed.
 
 2. Each signature is computed in parallel and placed into index of the
 `signatureValues` SEQUENCE that matches the position of the corresponding
 `SignatureInfo` in the `signatureInfos` sequence.
 
 The signer MUST produce one signature per `signatureInfo`, it MUST NOT
-produce fewer signatures than there are elements of the `signatureInfos`
-sequence.
+omit signatures and MUST NOT produce a subset of the signatures listed in `signaureInfos`.
 
 ## Verification Procedure
 
-1. The message to be verified is the `PkixEvidenceStatement` with an
-empty `signatureValues`; i.e. where `signatureValues` is a SEQUENCE of
-size 0.
+1. The message to be verified is the `TBSEvidenceStatement`.
 
 2. For each `signatureInfo`, the corresponding verification public key
 and signature algorithm is found according to the information contained
-in the `SignatureBlock` for that signature and any accompanying
+in the `SignatureInfo` for that signature and any accompanying
 certificates or key material.
 
 3. For each signature, the message is verified using the value from the
 corresponding element of the `signatureValue` sequence.
 
-4. The PkixEvidenceStatement SHOULD be considered valid if and only if
+4. The `PkixEvidenceStatement` SHOULD be considered valid if and only if
 all signatures are valid; i.e. multiple signatures are to be treated as
 an AND mode. This item is a recommendation and not a hard requirement
 since verification policy is of course at the discretion of the Verifier.
@@ -236,8 +236,11 @@ since verification policy is of course at the discretion of the Verifier.
 EDNOTE: the major change here from the original Crypto4A QASM Attestation
 is that the original only includes the claims in the signature, whereas
 this includes everything, including the version, list of signature
-algorithms, and certificates if any are present. This prevents
+algorithms. This prevents
 possible attacks where those values are manipulated by attackers.
+We should debate whether the certificates should be protected by the signature.
+Pro: generally better for security to sign everything.
+Con: in some contexts, it may be difficult to have the certificates prior to signing, but that's ok because most evidence carrier formats also allow you to attatch the signatures externally.
 
 # Claims
 
