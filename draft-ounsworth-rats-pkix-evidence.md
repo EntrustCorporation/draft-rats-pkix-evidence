@@ -39,8 +39,14 @@ author:
     code: K2K 3G5
     email: mike.ounsworth@entrust.com
   -
+    ins: JPF
     name: Jean-Pierre Fiset
-    organization: Crypto4A
+    organization: Crypto4A Technologies Inc.
+    abbrev: Crypto4A
+    street: 1550A Laperriere Ave
+    city: Ottawa, Ontario
+    country: Canada
+    code: K1Z 7T2
     email: jp@crypto4a.com
   -
     name: Hannes Tschofenig
@@ -152,14 +158,14 @@ with a digital signature.
 PkixEvidenceStatement ::= SEQUENCE {
   tbsEvidence TBSEvidenceStatement
   signatureValues SEQUENCE SIZE (1..MAX) OF BIT STRING,
+  relatedCertificates [0] IMPLICIT SEQUENCE of Certificate OPTIONAL
+  -- As defined in RFC 5280
 }
 
 TBSEvidenceStatement ::= SEQUENCE {
   version INTEGER,
   claims SET SIZE (1..MAX) OF EVIDENCE-CLAIM,
   signatureInfos SEQUENCE SIZE (1..MAX) OF SignatureInfo
-    relatedCertificates [0] IMPLICIT SEQUENCE of Certificate OPTIONAL
-    -- As defined in RFC 5280
 }
 
 EVIDENCE-CLAIM ::= TYPE-IDENTIFIER
@@ -280,7 +286,7 @@ For ease of reading, claims have been separated into two lists:
 | FipsMode       | TBD      | Boolean      | {{sect-fipsmode}}  | RECOMMENDED |
 | VendorInfo     | TBD      | TYPE-IDENTIFIER | {{sect-vendorinfo}}| OPTIONAL    |
 | NestedEvidences| TBD      | SEQUENCE OF PkixEvidenceStatement | {{sect-nestedevidences}} | OPTIONAL |
-| Nonce          | TBD      | OCTET STRING | {{sect-nonce}}     | RECOMMENDED |
+| Nonce          | TBD      | OCTET STRING | {{sect-nonce}}     | OPTIONAL    |
 ~~~
 
 ## Key Claims
