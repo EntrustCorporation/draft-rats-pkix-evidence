@@ -1,7 +1,7 @@
 ---
 title: PKI-based Attestation Evidence
 abbrev: PKI-based Attestation Evidence
-docname: draft-ounsworth-rats-attestation-evidence-latest
+docname: draft-ounsworth-rats-pkix-evidence-latest
 category: std
 consensus: true
 submissiontype: IETF
@@ -57,21 +57,13 @@ normative:
   RFC9334:
   RFC5280:
   I-D.ietf-rats-eat:
-  RFC9393:
 
 informative:
   RFC2986:
   RFC4211:
   RFC5912:
   RFC9344:
-  I-D.tschofenig-rats-psa-token:
   I-D.ietf-lamps-csr-attestation:
-  IANA-Hash:
-     author:
-        org: IANA
-     title: Hash Function Textual Names
-     target: https://www.iana.org/assignments/hash-function-text-names
-     date: 2023
 
 --- abstract
 
