@@ -51,6 +51,12 @@ author:
     name: Hannes Tschofenig
     organization: Siemens
     email: Hannes.Tschofenig@gmx.net
+  -
+    ins: M. Wiseman
+    name: Monty Wiseman
+    org: Beyond Identity
+    country: USA
+    email: monty.wiseman@beyondidentity.com
 
 normative:
   RFC2119:
