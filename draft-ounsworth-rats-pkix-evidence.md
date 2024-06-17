@@ -3,7 +3,6 @@ title: PKI-based Attestation Evidence
 abbrev: PKI-based Attestation Evidence
 docname: draft-ounsworth-rats-attestation-evidence-latest
 category: std
-updates: 7925 <-- Why? -->
 consensus: true
 submissiontype: IETF
 
@@ -780,10 +779,7 @@ be pre-populated with a value of `NULL`. If claims marked as "MUST NOT" are
 pre-populated with a value other than `NULL` the device MUST return and error
 and refuse to sign the evidence.
 
-
-
-Base PkixEvidenceStatement fields
----
+The base PkixEvidenceStatement fields are:
 
 ~~~
 | Claim          | Can be pre-populated? |
@@ -796,8 +792,7 @@ Base PkixEvidenceStatement fields
 ~~~
 
 
-Platform Claims
----
+The Platform Claims are:
 
 ~~~
 | Claim          | Can be pre-populated? |
@@ -831,8 +826,7 @@ Platform Claims
 ~~~
 
 
-Key Claims
----
+The Key Claims are:
 
 ~~~
 | Claim          | Can be pre-populated? |
