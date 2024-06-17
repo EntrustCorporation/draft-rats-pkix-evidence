@@ -38,6 +38,13 @@ author:
     code: K2K 3G5
     email: mike.ounsworth@entrust.com
   -
+    ins: R. Kettlewell
+    name: Richard Kettlewell
+    org: Entrust Limited
+    abbrev: Entrust
+    country: United Kingdom
+    email: Richard.Kettlewell@entrust.com
+  -
     ins: JPF
     name: Jean-Pierre Fiset
     organization: Crypto4A Technologies Inc.
