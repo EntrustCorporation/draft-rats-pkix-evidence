@@ -100,9 +100,9 @@ that the security sensitive operations are in fact being performed within
 a secure element. This evidence can pertain to the secure element platform
 itself, or to the storage and protection properties of the cryptographic keys,
 or both. This is generally referred to as remote attestation, and is covered by
-the Remote ATtestation procedureS (RATS) architecture [RFC9344]. This document
+the Remote ATtestation procedureS (RATS) architecture {{RFC9344}}. This document
 species an evidence data format specified in ASN.1 and re-using many data
-stuctures from the PKIX ASN.1 modules [RFC5912] so to be a convenient format
+stuctures from the PKIX ASN.1 modules {{RFC5912}} so to be a convenient format
 for secure elements and verifiers that are designed primarily for use within
 X.509 Public Key Infrastructures.
 
@@ -378,13 +378,13 @@ The value of this claim depends on the type of OEMID and three types of IDs
 are defined:
 
 - OEMIDs using a 128-bit random number.
-Section 4.2.3.1 of  {{I-D.ietf-rats-eat}} defines this type.
+Section 4.2.3.1 of {{I-D.ietf-rats-eat}} defines this type.
 
 - an IEEE based OEMID using a global registry for MAC addresses and company IDs.
-Section 4.2.3.1 of  {{I-D.ietf-rats-eat}} defines this type.
+Section 4.2.3.1 of {{I-D.ietf-rats-eat}} defines this type.
 
 - OEMIDs using Private Enterprise Numbers maintained by IANA.
-Section 4.2.3.3 of  {{I-D.ietf-rats-eat}} defines this type.
+Section 4.2.3.3 of {{I-D.ietf-rats-eat}} defines this type.
 
 The oemid claim is defined as follows:
 
@@ -746,7 +746,7 @@ SHOULD expect to encounter unrecognized claims, and to handle them gracefully.
 
 In general, the correct behaviour for a verifier will be to start with an
 appraisal policy of claims to look for, and where appropriate the expected
-values (ex.: FipsMode: true), and any additional claims that may be in the
+values (for example, FipsMode: true), and any additional claims that may be in the
 evidence SHOULD be ignored.
 
 # Implementation Considerations
