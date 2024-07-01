@@ -790,22 +790,18 @@ EvidenceClaims ::= SET SIZE (1..MAX) OF EVIDENCE-CLAIM
 ~~~~
 
 The EvidenceClaims represents an unsigned version of the evidence claims appraised by the CA.
-It MUST contain at least one claim.  The CA may include in their certificate profile a
+It MUST contain at least one claim.  For privacy reasons, the CA MAY include only a subset
+of the EvidenceClaims that were presented to it, for example in an EvidenceBundle in a CSR.
+The CA may include in their certificate profile a
 list of verified evidence claims (identified by OID) that MAY be copied from the CSR to
 the certificate, while any other claims MUST NOT be copied.
+By removing the signature from the evidence, the CA is asserting that it has has verified
+the Evidence to chain to a root that the CA trusts, but it is not required to disclose
+in the final certificate what that root is.
 
-The extension MUST NOT reveal any privacy-sensitive information beyond confirming that:
+See {{sec-priv-cons}} for a discussion of privacy concerns related to re-publishing
+Evidence into a certificate.
 
-* The evidence was appraised by the CA
-* The private key is non-exportable.
-* The cryptographic module was booted in FIPS mode.
-* The keys have a defined expiry.
-* Any other information that indicates the private key is stored in a safe environment.
-
-This ensures that the certificate contains only essential information necessary for
-security verification. No additional information should be included to protect the privacy
-of the Attester. Avoiding unnecessary claims also mitigates the risk of targeted attacks, where an
-attacker could exploit knowledge of hardware versions, models, etc.
 
 ## ASN.1 Module {#extclaims-asn}
 
@@ -941,6 +937,41 @@ The Key Claims are:
 | KeyExpiry      | MUST NOT              |
 ~~~
 
+# Privacy Considerations {#sec-priv-cons}
+
+## Publishing Evidence in a certificate
+
+The extension MUST NOT publish in the certificate any privacy-sensitive information
+that could compromise the end device. What counts as privacy-sensitive will vary by 
+use case. For example, consider a few scenarios:
+
+First, consider a Hardware Security Module (HSM) backing a public code-signing service.
+The model and firmware patch level could be considered sensitive as it could give an
+attacker an advantage in exploiting known vulnerabilities against un-patched systems.
+
+Second, consider a certificate issued to a end-user mobile computing device,
+any sort of unique identifier could be used as a super-cookie for tracking
+purposes.
+
+Third, consider small IoT devices such as un-patchable wireless sensors.
+Here there may be no privacy concerns and in fact knowing exact hardware
+and firmware version information could help edge gateways to deny network 
+access to devices with known vulnerabilities.
+
+The CA MUST remove the original signature and certificate chain, which 
+means that semantically the CA is asserting that it has appraised the Evidence
+and that it chains to an attestation root that the CA trusts, without revealing
+which root that is.
+
+Beyond that, a CA MUST have a configurable mechanism to control which information
+is to be copied from the provided Evidence into the certificate, for example this
+could be configured within a certificate profile or Certificate Practice Statement 
+(CPS) and this must be considered on a case-by-base basis.  To protect end-user 
+privacy, CA operators should err on the
+side of caution and exclude information that is not clearly essential for security
+verification by relying parties.  Avoiding unnecessary claims also mitigates the risk 
+of targeted attacks, where an
+attacker could exploit knowledge of hardware versions, models, etc.
 
 
 # Security Considerations {#sec-cons}
