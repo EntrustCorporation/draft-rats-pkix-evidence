@@ -59,6 +59,13 @@ author:
     organization: Siemens
     email: Hannes.Tschofenig@gmx.net
   -
+    fullname: Tirumaleswar Reddy
+    organization: Nokia
+    city: Bangalore
+    region: Karnataka
+    country: India
+    email: "kondtir@gmail.com"
+  -
     ins: M. Wiseman
     name: Monty Wiseman
     org: Beyond Identity
@@ -76,7 +83,14 @@ informative:
   RFC4211:
   RFC5912:
   RFC9344:
+  RFC6268:
   I-D.ietf-lamps-csr-attestation:
+  X.680:
+     title: "Information technology -- Abstract Syntax Notation One (ASN.1): Specification of basic notation"
+     author:
+        org: ITU-T
+        date: false
+     target: https://www.itu.int/rec/T-REC-X.680
 
 --- abstract
 
@@ -753,6 +767,85 @@ appraisal policy of claims to look for, and where appropriate the expected
 values (for example, FipsMode: true), and any additional claims that may be in the
 evidence SHOULD be ignored.
 
+# Evidence Claims Certificate Extension {#extclaims-extension}
+
+This section specifies the syntax and semantics of the Evidence Claims certificate extension which
+provides a list of claims associated with the certificate subject appraised by the CA.
+
+The Evidence Claims certificate extension MAY be included in public key certificates [RFC5280].
+The Evidence Claims certificate extension MUST be identified by the following object identifier:
+
+~~~~
+     id-pe-evidenceclaims OBJECT IDENTIFIER  ::=
+        { iso(1) identified-organization(3) dod(6) internet(1)
+          security(5) mechanisms(5) pkix(7) id-pe(1) 34 }
+~~~~
+
+This extension MUST NOT be marked critical.
+
+The Evidence Claims extension MUST have the following syntax:
+
+~~~~
+EvidenceClaims ::= SET SIZE (1..MAX) OF EVIDENCE-CLAIM
+~~~~
+
+The EvidenceClaims represents an unsigned version of the evidence claims appraised by the CA.
+It MUST contain at least one claim.  For privacy reasons, the CA MAY include only a subset
+of the EvidenceClaims that were presented to it, for example in an EvidenceBundle in a CSR.
+The CA may include in their certificate profile a
+list of verified evidence claims (identified by OID) that MAY be copied from the CSR to
+the certificate, while any other claims MUST NOT be copied.
+By removing the signature from the evidence, the CA is asserting that it has has verified
+the Evidence to chain to a root that the CA trusts, but it is not required to disclose
+in the final certificate what that root is.
+
+See {{sec-priv-cons}} for a discussion of privacy concerns related to re-publishing
+Evidence into a certificate.
+
+
+## ASN.1 Module {#extclaims-asn}
+
+This section provides an ASN.1 Module {{X.680}} for the Evidence Claims
+certificate extension, and it follows the conventions established in
+{{RFC5912}} and {{RFC6268}}.
+
+~~~~
+   <CODE BEGINS>
+     EvidenceClaimsCertExtn
+       { iso(1) identified-organization(3) dod(6) internet(1)
+         security(5) mechanisms(5) pkix(7) id-mod(0)
+         id-mod-evidenceclaims(TBD) }
+
+     DEFINITIONS IMPLICIT TAGS ::=
+     BEGIN
+
+     IMPORTS
+       EXTENSION
+       FROM PKIX-CommonTypes-2009  -- RFC 5912
+         { iso(1) identified-organization(3) dod(6) internet(1)
+           security(5) mechanisms(5) pkix(7) id-mod(0)
+           id-mod-pkixCommon-02(57) } ;
+
+     -- Evidence Claims Certificate Extension
+
+     ext-EvidenceClaims EXTENSION ::= {
+       SYNTAX EvidenceClaims
+       IDENTIFIED BY id-pe-evidenceclaims }
+
+     -- EvidenceClaims Certificate Extension OID
+
+     id-pe-evidenceclaims OBJECT IDENTIFIER ::=
+        { iso(1) identified-organization(3) dod(6) internet(1)
+          security(5) mechanisms(5) pkix(7) id-pe(1) 34 }
+
+     -- Evidence Claims Certificate Extension Syntax
+
+     EvidenceClaims ::= SET SIZE (1..MAX) OF EVIDENCE-CLAIM
+
+     END
+   <CODE ENDS>
+~~~~
+
 # Implementation Considerations
 
 ## API for requesting evidence from an attesting device
@@ -844,6 +937,42 @@ The Key Claims are:
 | KeyExpiry      | MUST NOT              |
 ~~~
 
+# Privacy Considerations {#sec-priv-cons}
+
+## Publishing Evidence in a certificate
+
+The extension MUST NOT publish in the certificate any privacy-sensitive information
+that could compromise the end device. What counts as privacy-sensitive will vary by 
+use case. For example, consider a few scenarios:
+
+First, consider a Hardware Security Module (HSM) backing a public code-signing service.
+The model and firmware patch level could be considered sensitive as it could give an
+attacker an advantage in exploiting known vulnerabilities against un-patched systems.
+
+Second, consider a certificate issued to a end-user mobile computing device,
+any sort of unique identifier could be used as a super-cookie for tracking
+purposes.
+
+Third, consider small IoT devices such as un-patchable wireless sensors.
+Here there may be no privacy concerns and in fact knowing exact hardware
+and firmware version information could help edge gateways to deny network 
+access to devices with known vulnerabilities.
+
+The CA MUST remove the original signature and certificate chain, which 
+means that semantically the CA is asserting that it has appraised the Evidence
+and that it chains to an attestation root that the CA trusts, without revealing
+which root that is.
+
+Beyond that, a CA MUST have a configurable mechanism to control which information
+is to be copied from the provided Evidence into the certificate, for example this
+could be configured within a certificate profile or Certificate Practice Statement 
+(CPS) and this must be considered on a case-by-base basis.  To protect end-user 
+privacy, CA operators should err on the
+side of caution and exclude information that is not clearly essential for security
+verification by relying parties.  Avoiding unnecessary claims also mitigates the risk 
+of targeted attacks, where an
+attacker could exploit knowledge of hardware versions, models, etc.
+
 
 # Security Considerations {#sec-cons}
 
@@ -877,6 +1006,18 @@ may be worthy of additional appraisal.
 #  IANA Considerations
 
 TBD: OIDs for all the claims listed in this document.
+
+## OIDs for Evidence Claims Certificate Extension
+
+For the EvidenceClaims certificate extension in {{extclaims-extension}},
+IANA is requested to assign an object identifier (OID) for the certificate extension.
+The OID for the certificate extension should be allocated in the "SMI
+Security for PKIX Certificate Extension" registry (1.3.6.1.5.5.7.1).
+
+For the ASN.1 Module in {{extclaims-asn}}, IANA is requested to assign an
+object identifier (OID) for the module identifier.  The OID for the
+module should be allocated in the "SMI Security for PKIX Module
+Identifier" registry (1.3.6.1.5.5.7.0).
 
 --- back
 
