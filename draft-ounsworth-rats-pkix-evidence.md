@@ -942,7 +942,7 @@ The Key Claims are:
 ## Publishing Evidence in a certificate
 
 The extension MUST NOT publish in the certificate any privacy-sensitive information
-that could compromise the end device. What counts as privacy-sensitive will vary by 
+that could compromise the end device. What counts as privacy-sensitive will vary by
 use case. For example, consider a few scenarios:
 
 First, consider a Hardware Security Module (HSM) backing a public code-signing service.
@@ -955,21 +955,21 @@ purposes.
 
 Third, consider small IoT devices such as un-patchable wireless sensors.
 Here there may be no privacy concerns and in fact knowing exact hardware
-and firmware version information could help edge gateways to deny network 
+and firmware version information could help edge gateways to deny network
 access to devices with known vulnerabilities.
 
-The CA MUST remove the original signature and certificate chain, which 
+The CA MUST remove the original signature and certificate chain, which
 means that semantically the CA is asserting that it has appraised the Evidence
 and that it chains to an attestation root that the CA trusts, without revealing
 which root that is.
 
 Beyond that, a CA MUST have a configurable mechanism to control which information
 is to be copied from the provided Evidence into the certificate, for example this
-could be configured within a certificate profile or Certificate Practice Statement 
-(CPS) and this must be considered on a case-by-base basis.  To protect end-user 
+could be configured within a certificate profile or Certificate Practice Statement
+(CPS) and this must be considered on a case-by-base basis.  To protect end-user
 privacy, CA operators should err on the
 side of caution and exclude information that is not clearly essential for security
-verification by relying parties.  Avoiding unnecessary claims also mitigates the risk 
+verification by relying parties.  Avoiding unnecessary claims also mitigates the risk
 of targeted attacks, where an
 attacker could exploit knowledge of hardware versions, models, etc.
 
