@@ -95,7 +95,7 @@ informative:
 --- abstract
 
 This document specifies ASN.1 structures produced by an Attester as part
-of the remote attestation procedures and consitute Evidence.
+of the remote attestation procedures and constitute Evidence.
 
 This document follows the Remote ATtestation procedureS (RATS)
 architecture where Evidence is sent by an Attester and processed by
@@ -106,7 +106,7 @@ a Verifier.
 # Introduction
 
 Trusted execution environments, like secure elements and hardware security
-modules, are now widely used, which provide a safe environment to place
+modules (HSMs), are now widely used, which provide a safe environment to place
 cryptographic key material and security sensitive code which uses it,
 such as signing and decryption services, secure boot, secure storage,
 and other essential security functions.  These security functions are
@@ -120,7 +120,7 @@ itself, or to the storage and protection properties of the cryptographic keys,
 or both. This is generally referred to as remote attestation, and is covered by
 the Remote ATtestation procedureS (RATS) architecture {{RFC9344}}. This document
 species an evidence data format specified in ASN.1 and re-using many data
-stuctures from the PKIX ASN.1 modules {{RFC5912}} so to be a convenient format
+structures from the PKIX ASN.1 modules {{RFC5912}} so to be a convenient format
 for secure elements and verifiers that are designed primarily for use within
 X.509 Public Key Infrastructures.
 
@@ -238,7 +238,7 @@ Crypto4A has already used?
 `SignatureInfo` in the `signatureInfos` sequence.
 
 The signer MUST produce one signature per `signatureInfo`, it MUST NOT
-omit signatures and MUST NOT produce a subset of the signatures listed in `signaureInfos`.
+omit signatures and MUST NOT produce a subset of the signatures listed in `signatureInfos`.
 
 ## Verification Procedure
 
@@ -264,11 +264,11 @@ algorithms. This prevents
 possible attacks where those values are manipulated by attackers.
 We should debate whether the certificates should be protected by the signature.
 Pro: generally better for security to sign everything.
-Con: in some contexts, it may be difficult to have the certificates prior to signing, but that's ok because most evidence carrier formats also allow you to attatch the signatures externally.
+Con: in some contexts, it may be difficult to have the certificates prior to signing, but that's ok because most evidence carrier formats also allow you to attach the signatures externally.
 
 # Claims
 
-Since no claims are marked as MANDATORY, the SetOfClaims MAY be empty. Each claim MAY only
+Since no claims are marked as MANDATORY, the attribute 'claims' MAY be empty. Each claim MAY only
 appear once. EDNOTE: I think that's taken care of by "SET OF".
 
 For ease of reading, claims have been separated into two lists:
@@ -311,6 +311,7 @@ For ease of reading, claims have been separated into two lists:
 
 ~~~
 | Claim          | OID      | Value        | Section           | Status       |
+| --------       | -------- | ------------ | ----------------- | ------------ |
 | KeyId          | TBD      | IA5String    | {{sect-keyid}}    | OPTIONAL     |
 | PubKey         | TBD      | OCTET STRING | {{sect-pubkey}}   | RECOMMENDED  |
 | Purpose        | TBD      | CHOICE       | {{sect-purpose}}  | RECOMMENDED  |
@@ -622,7 +623,7 @@ format `Time` instead of the 64-bit CBOR time structure.
 Iat EVIDENCE-CLAIM ::= Time
 ~~~
 
-It is recongized that many HSMs, especially if air-gapped, will
+It is recognized that many HSMs, especially if air-gapped, will
 not have an accurate system clock. If the system is not anticipated
 to have a reliable clock, then this claim SHOULD be omitted and
 the `Nonce` claim used instead.
