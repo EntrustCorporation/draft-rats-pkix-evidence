@@ -136,7 +136,7 @@ either PKCS#10 {{RFC2986}} or Certificate Request Message Format (CRMF)
 
 {{I-D.ietf-lamps-csr-attestation}} is agnostic to the content and the encoding
 of Evidence. To offer interoperability it is necessary to define a format
-that is utilized in a specific deployment environment environment.
+that is utilized in a specific deployment environment.
 Hardware security modules and other trusted execution environments, which
 have been using ASN.1-based encodings for a long time prefer the use of
 the same format throughout their software ecosystem. For those use cases
@@ -191,7 +191,7 @@ PkixEvidenceStatement ::= SEQUENCE {
 
 TBSEvidenceStatement ::= SEQUENCE {
   version INTEGER,
-  claims SET SIZE (1..MAX) OF EVIDENCE-CLAIM,
+  claims SEQUENCE SIZE (1..MAX) OF EVIDENCE-CLAIM,
   signatureInfos SEQUENCE SIZE (1..MAX) OF SignatureInfo
 }
 
@@ -277,8 +277,15 @@ Con: in some contexts, it may be difficult to have the certificates prior to sig
 
 # Claims
 
-Since no claims are marked as MANDATORY, the attribute 'claims' MAY be empty. Each claim MAY only
-appear once. EDNOTE: I think that's taken care of by "SET OF".
+Since no claims are marked as MANDATORY, the sequence 'claims' may be constituted of
+differing claims from one instance to the next. This is expected as each evidence statement
+may be providing information to support different use cases.
+
+Once an evidence statement is signed, the Attester is guaranteeing that all of the claims
+carried by the evidence statement are true.
+
+It is important to note that multiple claims in the sequence may have the same 'id'. Implementers
+should ensure that this case is handled by verifying logic.
 
 For ease of reading, claims have been separated into two lists:
 "platform claims" and "key claims".
@@ -333,9 +340,7 @@ Even though no specific claims are required, a Verifier or Relying Party MAY rej
 Evidence claim if it is missing information required by the appraisal
 policy. For example, a Relying Party which requires a FIPS-certified device
 SHOULD reject Evidence if it does not contain sufficient
-information to determine the FIPS certification status of the device. It
-is RECOMMENDED for Attesters to include as many claims as they have available
-data for.
+information to determine the FIPS certification status of the device.
 
 ## Device Identifier {#sect-deviceID}
 
@@ -702,7 +707,8 @@ The Nonce claim is used to carry the challenge provided by the caller to
 demonstrate freshness of the generated token. The following constraints
 apply to the nonce-type:
 
-- The length MUST be either 32, 48, or 64 bytes.
+- The length must be reasonable as it may be processed by end entities with limited resources.
+  Therefore, it is RECOMMENDED that the length does not exceed 64 bytes.
 - Only a single nonce value is conveyed.
 
 The nonce claim is defined as follows:
@@ -873,79 +879,25 @@ the cryptographic device to respond with multiple different sets of claims.
 
 ### Request by claim set
 
-TODO: go look at the Crypto4A QASM Attest document, because I think they have something similar.
+In this mode, the calling application pre-constructs a sequence of `EVIDENCE-CLAIM`
+which is passed in to the attesting device. As a response, the attesting device returns
+a structure of type `PkixEvidenceStatement` which includes all the expected signatures.
 
-In this mode, the calling application, which is located outside the attesting environment,
-pre-constructs a `PkixEvidenceStatement`
-which is passed in to the cryptographic device to be filled in with data and
-signed. In this way, the pre-constructed `PkixEvidenceStatement` acts as a blank
-form to be filled out by the attesting device.
+This mode is useful for attesting devices with more resources and used in situations where
+the supported evidence profiles may not be known during implementation.
 
-The following tables list which claims may or may not be pre-populated by
-the calling application. Claims intended to be populated by the device should
-be pre-populated with a value of `NULL`. If claims marked as "MUST NOT" are
-pre-populated with a value other than `NULL` the device MUST return and error
-and refuse to sign the evidence.
+It is left to the implementer to choose the way that the desired claims are submitted to the
+attesting device, including which types of claims are recognized and how much information is
+provided by the caller.
 
-The base PkixEvidenceStatement fields are:
+However, when using this mode:
+- an attesting device MUST reject the production of a `PkixEvidenceStatement` if any requested
+  claim is not recognized; and,
+- an attesting device MUST reject the production of a `PkixEvidenceStatement` if any requested
+  claim is not supported by the observed state (claim is deemed false).
 
-~~~
-| Claim          | Can be pre-populated? |
-| --------       | --------------------- |
-| version        | MUST NOT              |
-| claims         | MAY                   |
-| signatureInfos | Sequence MUST be empty (size 0) |
-| signatureValues| Sequence MUST be empty (size 0) |
-| relatedCertificates | MAY             |
-~~~
-
-
-The Platform Claims are:
-
-~~~
-| Claim          | Can be pre-populated? |
-| --------       | --------------------- |
-| Oemid          | MUST NOT              |
-| Hwmodel        | MUST NOT              |
-| Hwversion      | MUST NOT              |
-| Hwserial       | MUST NOT              |
-| Ueid           | MUST NOT              |
-| Sueid          | MUST NOT              |
-| EnvID          | MAY                   |
-| Swname         | MUST NOT              |
-| Swversion      | MUST NOT              |
-| Oemboot        | MUST NOT              |
-| Location       | MAY                   |
-| Dbgstat        | MUST NOT              |
-| Uptime         | MUST NOT              |
-| Bootcount      | MUST NOT              |
-| Bootseed       | MUST NOT              |
-| Dloas          | MAY                   |
-| Endorsements   | MAY                   |
-| Manifests      | MUST NOT              |
-| Measurements   | MUST NOT              |
-| Measres        | MUST NOT              |
-| Submods        | MUST NOT              |
-| Iat            | MUST NOT              |
-| FipsMode       | MUST NOT              |
-| VendorInfo     | MUST NOT              |
-| NestedEvidences| MAY                   |
-| Nonce          | SHOULD                |
-~~~
-
-
-The Key Claims are:
-
-~~~
-| Claim          | Can be pre-populated? |
-| --------       | --------------------- |
-| KeyID          | MAY                   |
-| PubKey         | MUST NOT              |
-| Purpose        | MUST NOT              |
-| NonExportable  | MUST NOT              |
-| Imported       | MUST NOT              |
-| KeyExpiry      | MUST NOT              |
-~~~
+The use of this mode implies that the attesting device contains the logic necessary to interpret
+and verify the submitted claims.
 
 # Privacy Considerations {#sec-priv-cons}
 
@@ -967,11 +919,6 @@ Third, consider small IoT devices such as un-patchable wireless sensors.
 Here there may be no privacy concerns and in fact knowing exact hardware
 and firmware version information could help edge gateways to deny network
 access to devices with known vulnerabilities.
-
-The CA MUST remove the original signature and certificate chain, which
-means that semantically the CA is asserting that it has appraised the Evidence
-and that it chains to an attestation root that the CA trusts, without revealing
-which root that is.
 
 Beyond that, a CA MUST have a configurable mechanism to control which information
 is to be copied from the provided Evidence into the certificate, for example this
