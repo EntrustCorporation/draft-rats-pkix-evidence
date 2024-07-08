@@ -1,0 +1,2614 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>PKI-based Attestation Evidence</title>
+<meta content="Mike Ounsworth" name="author">
+<meta content="Richard Kettlewell" name="author">
+<meta content="Jean-Pierre Fiset" name="author">
+<meta content="Hannes Tschofenig" name="author">
+<meta content="Tirumaleswar Reddy" name="author">
+<meta content="Monty Wiseman" name="author">
+<meta content="
+       This document specifies ASN.1 structures produced by an Attester as part
+of the remote attestation procedures and constitute Evidence. 
+       This document follows the Remote ATtestation procedureS (RATS)
+architecture where Evidence is sent by an Attester and processed by
+a Verifier. 
+    " name="description">
+<meta content="xml2rfc 3.22.0" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-ounsworth-rats-pkix-evidence-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.22.0
+    Python 3.12.3
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.4
+    lxml 4.9.4
+    platformdirs 4.2.2
+    pycountry 22.3.5
+    PyYAML 6.0.1
+    requests 2.32.3
+    setuptools 69.5.1
+    wcwidth 0.2.13
+-->
+<link href="draft-ounsworth-rats-pkix-evidence.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 2px 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">PKI-based Attestation Evidence</td>
+<td class="right">July 2024</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Ounsworth, et al.</td>
+<td class="center">Expires 9 January 2025</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">RATS</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ounsworth-rats-pkix-evidence-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2024-07-08" class="published">8 July 2024</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2025-01-09">9 January 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">M. Ounsworth</div>
+<div class="org">Entrust</div>
+</div>
+<div class="author">
+      <div class="author-name">R. Kettlewell</div>
+<div class="org">Entrust</div>
+</div>
+<div class="author">
+      <div class="author-name">JPF</div>
+<div class="org">Crypto4A</div>
+</div>
+<div class="author">
+      <div class="author-name">H. Tschofenig</div>
+<div class="org">Siemens</div>
+</div>
+<div class="author">
+      <div class="author-name">T. Reddy</div>
+<div class="org">Nokia</div>
+</div>
+<div class="author">
+      <div class="author-name">M. Wiseman</div>
+<div class="org">Beyond Identity</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">PKI-based Attestation Evidence</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document specifies ASN.1 structures produced by an Attester as part
+of the remote attestation procedures and constitute Evidence.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document follows the Remote ATtestation procedureS (RATS)
+architecture where Evidence is sent by an Attester and processed by
+a Verifier.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 9 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2024 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-attestation-evidence" class="internal xref">Attestation Evidence</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-signing-and-verification-pr" class="internal xref">Signing and Verification Procedure</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-signing-procedure" class="internal xref">Signing Procedure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-verification-procedure" class="internal xref">Verification Procedure</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-claims" class="internal xref">Claims</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-platform-claims" class="internal xref">Platform Claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-key-claims" class="internal xref">Key Claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-device-identifier" class="internal xref">Device Identifier</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.1">
+                    <p id="section-toc.1-1.5.2.3.2.1.1"><a href="#section-5.3.1" class="auto internal xref">5.3.1</a>.  <a href="#name-ueid-universal-entity-id-cl" class="internal xref">ueid (Universal Entity ID) Claim</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.2">
+                    <p id="section-toc.1-1.5.2.3.2.2.1"><a href="#section-5.3.2" class="auto internal xref">5.3.2</a>.  <a href="#name-sueids-semi-permanent-ueids" class="internal xref">sueids (Semi-permanent UEIDs) Claim (SUEIDs)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.3">
+                    <p id="section-toc.1-1.5.2.3.2.3.1"><a href="#section-5.3.3" class="auto internal xref">5.3.3</a>.  <a href="#name-oemid-hardware-oem-identifi" class="internal xref">oemid (Hardware OEM Identification) Claim</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.4">
+                    <p id="section-toc.1-1.5.2.3.2.4.1"><a href="#section-5.3.4" class="auto internal xref">5.3.4</a>.  <a href="#name-hwmodel-hardware-model-clai" class="internal xref">hwmodel (Hardware Model) Claim</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.5">
+                    <p id="section-toc.1-1.5.2.3.2.5.1"><a href="#section-5.3.5" class="auto internal xref">5.3.5</a>.  <a href="#name-hwversion-hardware-version-" class="internal xref">hwversion (Hardware Version) Claim</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-environment-identifier" class="internal xref">Environment Identifier</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-software-identifier" class="internal xref">Software Identifier</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6">
+                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-oem-boot" class="internal xref">OEM Boot</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.7">
+                <p id="section-toc.1-1.5.2.7.1"><a href="#section-5.7" class="auto internal xref">5.7</a>.  <a href="#name-dbgstat-debug-status" class="internal xref">Dbgstat (Debug Status)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.8">
+                <p id="section-toc.1-1.5.2.8.1"><a href="#section-5.8" class="auto internal xref">5.8</a>.  <a href="#name-location" class="internal xref">Location</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.9">
+                <p id="section-toc.1-1.5.2.9.1"><a href="#section-5.9" class="auto internal xref">5.9</a>.  <a href="#name-uptime" class="internal xref">Uptime</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.10">
+                <p id="section-toc.1-1.5.2.10.1"><a href="#section-5.10" class="auto internal xref">5.10</a>. <a href="#name-bootcount-sect-bootcount" class="internal xref">Bootcount {sect-bootcount}</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.11">
+                <p id="section-toc.1-1.5.2.11.1"><a href="#section-5.11" class="auto internal xref">5.11</a>. <a href="#name-bootseed" class="internal xref">Bootseed</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.12">
+                <p id="section-toc.1-1.5.2.12.1"><a href="#section-5.12" class="auto internal xref">5.12</a>. <a href="#name-dloas-digital-letters-of-ap" class="internal xref">dloas (Digital Letters of Approval)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.13">
+                <p id="section-toc.1-1.5.2.13.1"><a href="#section-5.13" class="auto internal xref">5.13</a>. <a href="#name-endorsements" class="internal xref">Endorsements</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.14">
+                <p id="section-toc.1-1.5.2.14.1"><a href="#section-5.14" class="auto internal xref">5.14</a>. <a href="#name-manifests" class="internal xref">Manifests</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.15">
+                <p id="section-toc.1-1.5.2.15.1"><a href="#section-5.15" class="auto internal xref">5.15</a>. <a href="#name-measurements" class="internal xref">Measurements</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.16">
+                <p id="section-toc.1-1.5.2.16.1"><a href="#section-5.16" class="auto internal xref">5.16</a>. <a href="#name-measres-software-measuremen" class="internal xref">Measres (Software Measurement Results)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.17">
+                <p id="section-toc.1-1.5.2.17.1"><a href="#section-5.17" class="auto internal xref">5.17</a>. <a href="#name-submods-submodules" class="internal xref">Submods (Submodules)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.18">
+                <p id="section-toc.1-1.5.2.18.1"><a href="#section-5.18" class="auto internal xref">5.18</a>. <a href="#name-iat-issuance-time" class="internal xref">iat (Issuance Time)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.19">
+                <p id="section-toc.1-1.5.2.19.1"><a href="#section-5.19" class="auto internal xref">5.19</a>. <a href="#name-intuse-intended-use" class="internal xref">intuse (Intended Use)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.20">
+                <p id="section-toc.1-1.5.2.20.1"><a href="#section-5.20" class="auto internal xref">5.20</a>. <a href="#name-fipsmode" class="internal xref">FipsMode</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.21">
+                <p id="section-toc.1-1.5.2.21.1"><a href="#section-5.21" class="auto internal xref">5.21</a>. <a href="#name-vendorinfo" class="internal xref">VendorInfo</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.22">
+                <p id="section-toc.1-1.5.2.22.1"><a href="#section-5.22" class="auto internal xref">5.22</a>. <a href="#name-nestedevidences" class="internal xref">NestedEvidences</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.23">
+                <p id="section-toc.1-1.5.2.23.1"><a href="#section-5.23" class="auto internal xref">5.23</a>. <a href="#name-nonce" class="internal xref">Nonce</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.24">
+                <p id="section-toc.1-1.5.2.24.1"><a href="#section-5.24" class="auto internal xref">5.24</a>. <a href="#name-keyid" class="internal xref">KeyId</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.25">
+                <p id="section-toc.1-1.5.2.25.1"><a href="#section-5.25" class="auto internal xref">5.25</a>. <a href="#name-pubkey" class="internal xref">PubKey</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.26">
+                <p id="section-toc.1-1.5.2.26.1"><a href="#section-5.26" class="auto internal xref">5.26</a>. <a href="#name-purpose" class="internal xref">Purpose</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.27">
+                <p id="section-toc.1-1.5.2.27.1"><a href="#section-5.27" class="auto internal xref">5.27</a>. <a href="#name-nonexportable" class="internal xref">NonExportable</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.28">
+                <p id="section-toc.1-1.5.2.28.1"><a href="#section-5.28" class="auto internal xref">5.28</a>. <a href="#name-imported" class="internal xref">Imported</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.29">
+                <p id="section-toc.1-1.5.2.29.1"><a href="#section-5.29" class="auto internal xref">5.29</a>. <a href="#name-keyexpiry" class="internal xref">KeyExpiry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.30">
+                <p id="section-toc.1-1.5.2.30.1"><a href="#section-5.30" class="auto internal xref">5.30</a>. <a href="#name-unrecognized-claims" class="internal xref">Unrecognized claims</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-evidence-claims-certificate" class="internal xref">Evidence Claims Certificate Extension</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-asn1-module" class="internal xref">ASN.1 Module</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-api-for-requesting-evidence" class="internal xref">API for requesting evidence from an attesting device</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
+                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-request-by-id-and-claim-pro" class="internal xref">Request by ID and claim profile</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.2">
+                    <p id="section-toc.1-1.7.2.1.2.2.1"><a href="#section-7.1.2" class="auto internal xref">7.1.2</a>.  <a href="#name-request-by-claim-set" class="internal xref">Request by claim set</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-publishing-evidence-in-a-ce" class="internal xref">Publishing Evidence in a certificate</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-oids-for-evidence-claims-ce" class="internal xref">OIDs for Evidence Claims Certificate Extension</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-asn1-module-2" class="internal xref">ASN.1 Module</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Trusted execution environments, like secure elements and hardware security
+modules (HSMs), are now widely used, which provide a safe environment to place
+cryptographic key material and security sensitive code which uses it,
+such as signing and decryption services, secure boot, secure storage,
+and other essential security functions.  These security functions are
+typically exposed through a narrow and well-defined interface, and can be
+used by operating system libraries and applications.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Increasingly, parties that rely on these secure elements want evidence
+that the security sensitive operations are in fact being performed within
+a secure element. This evidence can pertain to the secure element platform
+itself, or to the storage and protection properties of the cryptographic keys,
+or both. This is generally referred to as remote attestation, and is covered by
+the Remote ATtestation procedureS (RATS) architecture <span>[<a href="#RFC9344" class="cite xref">RFC9344</a>]</span>. This document
+species an evidence data format specified in ASN.1 and re-using many data
+structures from the PKIX ASN.1 modules <span>[<a href="#RFC5912" class="cite xref">RFC5912</a>]</span> so to be a convenient format
+for secure elements and verifiers that are designed primarily for use within
+X.509 Public Key Infrastructures.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">When a Certificate Signing Request (CSR) library is requesting a certificate
+from a Certification Authority (CA), a PKI end entity may wish to provide
+Evidence of the security properties of the trusted execution environment
+in which the private key is stored. This Evidence is to be verified by a
+Relying Party, such as the Registration Authority or the Certification
+Authority as part of validating an incoming CSR against a given certificate
+policy. <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> defines how to carry Evidence in
+either PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span> or Certificate Request Message Format (CRMF)
+<span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4"><span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> is agnostic to the content and the encoding
+of Evidence. To offer interoperability it is necessary to define a format
+that is utilized in a specific deployment environment.
+Hardware security modules and other trusted execution environments, which
+have been using ASN.1-based encodings for a long time prefer the use of
+the same format throughout their software ecosystem. For those use cases
+this specification has been developed.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">This specification re-uses the claims defined in <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>.
+While the encoding of the claims is different to what is defined in
+<span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>, the semantics of the claims is retained. This
+specification is not an EAP profile, as defined in Section 6 of
+<span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span><a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">This specification was designed to meet the requirements published by the
+CA Browser Forum to convey properties about hardware security models, such
+as non-exportability, which must be enabled for storing publicly-trusted
+code-signing keys. Hence, this specification is supposed to be used with
+the attestation extension for Certificate Signing Requests (CSRs), see
+<span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">There are, however, other use cases where remote attestation may also be
+used, such as<a href="#section-1-7" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-1-8.1">
+          <p id="section-1-8.1.1">A Certification Authority receives a certificate signing request and wishes to verify that the subject public key was generated in an HSM (for example to satisfy CA/B Forum subscriber private key verification requirement). They may also wish to verify that the operations the HSM will allow for the corresponding private key are consistent with the purpose of the requested certificate.<a href="#section-1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="compact" id="section-1-8.2">
+          <p id="section-1-8.2.1">A user of a Cloud Service Provider's 'Bring Your Own Key' service wishes to transfer their locally-generated key securely to the CSP's service by encrypting it under the CSP's public key. As part of their due diligence on the CSP's key they wish to verify (1) that it was generated by an HSM and (2) may only be used to unwrap the key into an HSM (i.e. unwrap permission but not decrypt permission).<a href="#section-1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="compact" id="section-1-8.3">
+          <p id="section-1-8.3.1">An auditor of an identity provision service (or a competent end user) may wish to verify that keys representing end-user identities are held in an HSM and have permissions that are in line with the applicable regulations. For example, they may wish verify that the protection arrangements for assigned keys cannot be changed.<a href="#section-1-8.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="compact" id="section-1-8.4">
+          <p id="section-1-8.4.1">A manufacturer needs to provision configuration info, software, and credentials to a device from remote. With the help of remote attestation the manufacturer is provided enough information to verify that information is only sent to devices it has built.<a href="#section-1-8.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">This document re-uses the terms defined in <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> related to remote
+attestation. Readers of this document are assumed to be familiar with
+the following terms: Evidence, Claim, Attestation Result, Attester,
+Verifier, and Relying Party.<a href="#section-2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="attestation-evidence">
+<section id="section-3">
+      <h2 id="name-attestation-evidence">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-attestation-evidence" class="section-name selfRef">Attestation Evidence</a>
+      </h2>
+<p id="section-3-1">This specification defines the following Evidence format, which contains
+a set of claims. To protect Evidence against modification, it is protected
+with a digital signature.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-3-2">
+<pre>
+PkixEvidenceStatement ::= SEQUENCE {
+  tbsEvidence TBSEvidenceStatement
+  signatureValues SEQUENCE SIZE (1..MAX) OF BIT STRING,
+  relatedCertificates [0] IMPLICIT SEQUENCE of Certificate OPTIONAL
+  -- As defined in RFC 5280
+}
+
+TBSEvidenceStatement ::= SEQUENCE {
+  version INTEGER,
+  claims SEQUENCE SIZE (1..MAX) OF EVIDENCE-CLAIM,
+  signatureInfos SEQUENCE SIZE (1..MAX) OF SignatureInfo
+}
+
+EVIDENCE-CLAIM ::= TYPE-IDENTIFIER
+
+-- TYPE-IDENTIFIER definition from X.681
+TYPE-IDENTIFIER ::= CLASS
+{
+    &amp;id OBJECT IDENTIFIER UNIQUE,
+    &amp;Type
+}
+WITH SYNTAX {&amp;Type IDENTIFIED BY &amp;id}
+
+SignatureInfo ::= SEQUENCE {
+   signatureAlgorithm AlgorithmIdentifier,
+   sid [0] SignerIdentifier OPTIONAL
+}
+
+SignerIdentifier ::= SEQUENCE {
+   keyId [0] EXPLICIT OCTET STRING OPTIONAL,
+   subjectKeyIdentifier [1] EXPLICIT SubjectPublicKeyInfo OPTIONAL,
+     -- As defined in RFC 5280
+   certificate [2] EXPLICIT Certificate OPTIONAL,
+     -- As defined in RFC 5280
+   certHash [3] EXPLICIT CertHash OPTIONAL
+}
+
+CertHash ::= SEQUENCE {
+    hash AlgorithmIdentifier,
+    value OCTET STRING
+}
+-- There is bound to already exist an ASN.1 structure for this somewhere.
+
+AlgorithmIdentifier ::= SEQUENCE {
+   algorithm OBJECT IDENTIFIER,
+   parameters ANY DEFINED BY algorithm OPTIONAL
+}
+</pre><a href="#section-3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3-3"><code>version</code> <span class="bcp14">MUST</span> be set to 1.<a href="#section-3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="signing-and-verification-procedure">
+<section id="section-4">
+      <h2 id="name-signing-and-verification-pr">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-signing-and-verification-pr" class="section-name selfRef">Signing and Verification Procedure</a>
+      </h2>
+<p id="section-4-1">EDNOTE: Can we start our versions at some number to avoid versions that
+Crypto4A has already used?<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="signing-procedure">
+<section id="section-4.1">
+        <h3 id="name-signing-procedure">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-signing-procedure" class="section-name selfRef">Signing Procedure</a>
+        </h3>
+<ol start="1" type="1" class="compact type-1" id="section-4.1-1">
+<li id="section-4.1-1.1">
+            <p id="section-4.1-1.1.1">The message to be signed is the <code>TBSEvidenceStatement</code>, including the <code>SignatureInfo</code> for each of the signatures to be performed.<a href="#section-4.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.1-1.2">
+            <p id="section-4.1-1.2.1">Each signature is computed in parallel and placed into index of the
+<code>signatureValues</code> SEQUENCE that matches the position of the corresponding
+<code>SignatureInfo</code> in the <code>signatureInfos</code> sequence.<a href="#section-4.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-4.1-2">The signer <span class="bcp14">MUST</span> produce one signature per <code>signatureInfo</code>, it <span class="bcp14">MUST NOT</span>
+omit signatures and <span class="bcp14">MUST NOT</span> produce a subset of the signatures listed in <code>signatureInfos</code>.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="verification-procedure">
+<section id="section-4.2">
+        <h3 id="name-verification-procedure">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-verification-procedure" class="section-name selfRef">Verification Procedure</a>
+        </h3>
+<ol start="1" type="1" class="compact type-1" id="section-4.2-1">
+<li id="section-4.2-1.1">
+            <p id="section-4.2-1.1.1">The message to be verified is the <code>TBSEvidenceStatement</code>.<a href="#section-4.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-1.2">
+            <p id="section-4.2-1.2.1">For each <code>signatureInfo</code>, the corresponding verification public key
+and signature algorithm is found according to the information contained
+in the <code>SignatureInfo</code> for that signature and any accompanying
+certificates or key material.<a href="#section-4.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-1.3">
+            <p id="section-4.2-1.3.1">For each signature, the message is verified using the value from the
+corresponding element of the <code>signatureValue</code> sequence.<a href="#section-4.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-1.4">
+            <p id="section-4.2-1.4.1">The <code>PkixEvidenceStatement</code> <span class="bcp14">SHOULD</span> be considered valid if and only if
+all signatures are valid; i.e. multiple signatures are to be treated as
+an AND mode. This item is a recommendation and not a hard requirement
+since verification policy is of course at the discretion of the Verifier.<a href="#section-4.2-1.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-4.2-2">EDNOTE: the major change here from the original Crypto4A QASM Attestation
+is that the original only includes the claims in the signature, whereas
+this includes everything, including the version, list of signature
+algorithms. This prevents
+possible attacks where those values are manipulated by attackers.
+We should debate whether the certificates should be protected by the signature.
+Pro: generally better for security to sign everything.
+Con: in some contexts, it may be difficult to have the certificates prior to signing, but that's ok because most evidence carrier formats also allow you to attach the signatures externally.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="claims">
+<section id="section-5">
+      <h2 id="name-claims">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-claims" class="section-name selfRef">Claims</a>
+      </h2>
+<p id="section-5-1">Since no claims are marked as MANDATORY, the sequence 'claims' may be constituted of
+differing claims from one instance to the next. This is expected as each evidence statement
+may be providing information to support different use cases.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">Once an evidence statement is signed, the Attester is guaranteeing that all of the claims
+carried by the evidence statement are true.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">It is important to note that multiple claims in the sequence may have the same 'id'. Implementers
+should ensure that this case is handled by verifying logic.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">For ease of reading, claims have been separated into two lists:
+"platform claims" and "key claims".<a href="#section-5-4" class="pilcrow">¶</a></p>
+<div id="platform-claims">
+<section id="section-5.1">
+        <h3 id="name-platform-claims">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-platform-claims" class="section-name selfRef">Platform Claims</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="section-5.1-1">
+<pre>
+| Claim          | OID      | Value        | Section           | Status       |
+| --------       | -------- | ------------ | ----------------- | ------------ |
+| Oemid          | TBD      | UTF8String   | {{sect-deviceID}} | RECOMMENDED  |
+| Hwmodel        | TBD      | UTF8String   | {{sect-deviceID}} | RECOMMENDED  |
+| Hwversion      | TBD      | UTF8String   | {{sect-deviceID}} | RECOMMENDED  |
+| Hwserial       | TBD      | UTF8String   | {{sect-deviceID}} | RECOMMENDED  |
+| Ueid           | TBD      | UTF8String   | {{sect-ueid}    } | OPTIONAL     |
+| Sueid          | TBD      | UTF8String   | {{sect-sueid}}    | OPTIONAL     |
+| EnvID          | TBD      | UTF8String   | {{sect-envID}}    | OPTIONAL     |
+| Swname         | TBD      | UTF8String   | {{sect-swID}}     | RECOMMENDED  |
+| Swversion      | TBD      | UTF8String   | {{sect-swID}}     | RECOMMENDED  |
+| Oemboot        | TBD      | BOOLEAN      | {{sect-oemboot}}  | RECOMMENDED  |
+| Location       | TBD      | ???          | {{sect-location}} | OPTIONAL     |
+| Dbgstat        | TBD      | CHOICE       | {{sect-dbgstat}}  | RECOMMENDED  |
+| Uptime         | TBD      | INTEGER      | {{sect-uptime}}   | OPTIONAL     |
+| Bootcount      | TBD      | INTEGER      | {{sect-bootcount}}| OPTIONAL     |
+| Bootseed       | TBD      | BIT STRING   | {{sect-bootseed}} | OPTIONAL     |
+| Dloas          | TBD      | SEQUENCE OF Dloa | {{sect-dloas}}    | OPTIONAL     |
+| Endorsements   | TBD      | SEQUENCE of Endorsement | {{sect-endorsements}} | OPTIONAL |
+| Manifests      | TBD      | ??           | {{sect-manifests}} | OPTIONAL    |
+| Measurements   | TBD      | ??           | {{sect-measurements}} | OPTIONAL    |
+| Measres        | TBD      | ??           | {{sect-measres}}   | OPTIONAL    |
+| Submods        | TBD      | ??           | {{sect-submods}}   | OPTIONAL    |
+| Iat            | TBD      | Time         | {{sect-iat}}       | RECOMMENDED |
+| FipsMode       | TBD      | Boolean      | {{sect-fipsmode}}  | RECOMMENDED |
+| VendorInfo     | TBD      | TYPE-IDENTIFIER | {{sect-vendorinfo}}| OPTIONAL    |
+| NestedEvidences| TBD      | SEQUENCE OF PkixEvidenceStatement | {{sect-nestedevidences}} | OPTIONAL |
+| Nonce          | TBD      | OCTET STRING | {{sect-nonce}}     | OPTIONAL    |
+</pre><a href="#section-5.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="key-claims">
+<section id="section-5.2">
+        <h3 id="name-key-claims">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-key-claims" class="section-name selfRef">Key Claims</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="section-5.2-1">
+<pre>
+| Claim          | OID      | Value        | Section           | Status       |
+| --------       | -------- | ------------ | ----------------- | ------------ |
+| KeyId          | TBD      | IA5String    | {{sect-keyid}}    | OPTIONAL     |
+| PubKey         | TBD      | OCTET STRING | {{sect-pubkey}}   | RECOMMENDED  |
+| Purpose        | TBD      | CHOICE       | {{sect-purpose}}  | RECOMMENDED  |
+| NonExportable  | TBD      | BOOLEAN      | {{sect-nonexportable}} | RECOMMENDED |
+| Imported       | TBD      | BOOLEAN      | {{sect-imported}} | RECOMMENDED  |
+| KeyExpiry      | TBD      | Time         | {{sect-keyexpiry}}| OPTIONAL     |
+</pre><a href="#section-5.2-1" class="pilcrow">¶</a>
+</div>
+<p id="section-5.2-2">Even though no specific claims are required, a Verifier or Relying Party <span class="bcp14">MAY</span> reject an
+Evidence claim if it is missing information required by the appraisal
+policy. For example, a Relying Party which requires a FIPS-certified device
+<span class="bcp14">SHOULD</span> reject Evidence if it does not contain sufficient
+information to determine the FIPS certification status of the device.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-deviceID">
+<section id="section-5.3">
+        <h3 id="name-device-identifier">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-device-identifier" class="section-name selfRef">Device Identifier</a>
+        </h3>
+<p id="section-5.3-1">Devices assigned a Universal Entity ID compliant with RATS EAT <span class="bcp14">SHOULD</span>
+provide this in the <code>Ueid</code> or <code>Sueid</code> claim. Devices with a traditional
+human-readable serial number <span class="bcp14">SHOULD</span> provide this in the <code>Hwserial</code> claim.
+Both <span class="bcp14">MAY</span> be provided.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">The set <code>{OemID, Hwmodel, Hwversion, Hwserial}</code>, when provided, <span class="bcp14">SHOULD</span>
+represent a universally unique identification of the device. Where
+applicable, <code>{OemID, Hwmodel, Hwversion}</code> <span class="bcp14">SHOULD</span> match the way the
+device is identified in relevant endorsements, such as published FIPS
+or Common Criteria certificates.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<div id="sect-ueid">
+<section id="section-5.3.1">
+          <h4 id="name-ueid-universal-entity-id-cl">
+<a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-ueid-universal-entity-id-cl" class="section-name selfRef">ueid (Universal Entity ID) Claim</a>
+          </h4>
+<p id="section-5.3.1-1">The "ueid" claim conveys a UEID, which identifies an individual manufactured
+entity. This identifier is a globally unique and permanent identifier. See
+Section 4.2.1 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this claim. Three
+types of UEIDs are defined, which are distinguished via a type field.<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-2">The ueid claim is defined as follows:<a href="#section-5.3.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3.1-3">
+<pre>
+   id-ce-evidence-ueid OBJECT IDENTIFIER ::=
+         { id-ce TBD_evidence TBD_ueid }
+
+   claim_ueid ::= SEQUENCE {
+       type    INTEGER ( RAND(1), EUI(2), IMEI(3),...),
+       value   OCTET STRING
+   }
+</pre><a href="#section-5.3.1-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-sueid">
+<section id="section-5.3.2">
+          <h4 id="name-sueids-semi-permanent-ueids">
+<a href="#section-5.3.2" class="section-number selfRef">5.3.2. </a><a href="#name-sueids-semi-permanent-ueids" class="section-name selfRef">sueids (Semi-permanent UEIDs) Claim (SUEIDs)</a>
+          </h4>
+<p id="section-5.3.2-1">The "sueids" claim conveys one or more semi-permanent UEIDs (SUEIDs).
+An SUEID has the same format, characteristics and requirements as a
+UEID, but <span class="bcp14">MAY</span> change to a different value on entity life-cycle
+events while the ueid claim is permanent. An entity <span class="bcp14">MAY</span> have both
+a UEID and SUEIDs, neither, one or the other.<a href="#section-5.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.2-2">There <span class="bcp14">MAY</span> be multiple SUEIDs and each has a text string label the
+purpose of which is to distinguish it from others.<a href="#section-5.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.3.2-3">See Section 4.2.2 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this claim.<a href="#section-5.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.3.2-4">The sueids claim is defined as follows:<a href="#section-5.3.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3.2-5">
+<pre>
+   id-ce-evidence-sueids OBJECT IDENTIFIER ::=
+         { id-ce TBD_evidence TBD_sueids }
+
+   claim_sueids ::= SEQUENCE {
+       label   OCTET STRING,
+       type    INTEGER ( RAND(1), EUI(2), IMEI(3),...),
+       value   OCTET STRING
+   }
+</pre><a href="#section-5.3.2-5" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="oemid-hardware-oem-identification-claim">
+<section id="section-5.3.3">
+          <h4 id="name-oemid-hardware-oem-identifi">
+<a href="#section-5.3.3" class="section-number selfRef">5.3.3. </a><a href="#name-oemid-hardware-oem-identifi" class="section-name selfRef">oemid (Hardware OEM Identification) Claim</a>
+          </h4>
+<p id="section-5.3.3-1">The "oemid" claim identifies the Original Equipment Manufacturer (OEM) of
+the hardware.<a href="#section-5.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.3-2">See Section 4.2.3 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this claim.<a href="#section-5.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3.3-3">The value of this claim depends on the type of OEMID and three types of IDs
+are defined:<a href="#section-5.3.3-3" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-5.3.3-4.1">
+              <p id="section-5.3.3-4.1.1">OEMIDs using a 128-bit random number.
+Section 4.2.3.1 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> defines this type.<a href="#section-5.3.3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-5.3.3-4.2">
+              <p id="section-5.3.3-4.2.1">an IEEE based OEMID using a global registry for MAC addresses and company IDs.
+Section 4.2.3.1 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> defines this type.<a href="#section-5.3.3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-5.3.3-4.3">
+              <p id="section-5.3.3-4.3.1">OEMIDs using Private Enterprise Numbers maintained by IANA.
+Section 4.2.3.3 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> defines this type.<a href="#section-5.3.3-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-5.3.3-5">The oemid claim is defined as follows:<a href="#section-5.3.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3.3-6">
+<pre>
+   id-ce-evidence-oemid OBJECT IDENTIFIER ::=
+         { id-ce TBD_evidence TBD_oemid }
+
+   claim_oemid ::= SEQUENCE {
+       type    INTEGER ( PEN(1), IEEE(2), RANDOM(3),...),
+       value   OCTET STRING
+   }
+</pre><a href="#section-5.3.3-6" class="pilcrow">¶</a>
+</div>
+<p id="section-5.3.3-7">Editor's Note: The value for the PEN is numeric. For the other
+two types it is a binary string.<a href="#section-5.3.3-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="hwmodel-hardware-model-claim">
+<section id="section-5.3.4">
+          <h4 id="name-hwmodel-hardware-model-clai">
+<a href="#section-5.3.4" class="section-number selfRef">5.3.4. </a><a href="#name-hwmodel-hardware-model-clai" class="section-name selfRef">hwmodel (Hardware Model) Claim</a>
+          </h4>
+<p id="section-5.3.4-1">The "hwmodel" claim differentiates hardware models, products and variants
+manufactured by a particular OEM, the one identified by OEM ID.
+It <span class="bcp14">MUST</span> be unique within a given OEM ID.  The concatenation of the OEM ID
+and "hwmodel" give a global identifier of a particular product.
+The "hwmodel" claim <span class="bcp14">MUST</span> only be present if an "oemid" claim is present.<a href="#section-5.3.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.4-2">See Section 4.2.4 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this claim.<a href="#section-5.3.4-2" class="pilcrow">¶</a></p>
+<p id="section-5.3.4-3">The hwmodel claim is defined as follows:<a href="#section-5.3.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3.4-4">
+<pre>
+   id-ce-evidence-hwmodel OBJECT IDENTIFIER ::=
+         { id-ce TBD_evidence TBD_hwmodel }
+
+   claim_hwmodel ::= OCTET STRING
+</pre><a href="#section-5.3.4-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="hwversion-hardware-version-claim">
+<section id="section-5.3.5">
+          <h4 id="name-hwversion-hardware-version-">
+<a href="#section-5.3.5" class="section-number selfRef">5.3.5. </a><a href="#name-hwversion-hardware-version-" class="section-name selfRef">hwversion (Hardware Version) Claim</a>
+          </h4>
+<p id="section-5.3.5-1">The "hwversion" claim is a text string the format of which is set by each
+manufacturer. A "hwversion" claim <span class="bcp14">MUST</span> only be present if a "hwmodel" claim
+is present.<a href="#section-5.3.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.5-2">See Section 4.2.5 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this claim.<a href="#section-5.3.5-2" class="pilcrow">¶</a></p>
+<p id="section-5.3.5-3">The hwversion claim is defined as follows:<a href="#section-5.3.5-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3.5-4">
+<pre>
+   id-ce-evidence-hwversion OBJECT IDENTIFIER ::=
+         { id-ce TBD_evidence TBD_hwwversion }
+
+   hwversion ::= OCTET STRING
+</pre><a href="#section-5.3.5-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sect-envID">
+<section id="section-5.4">
+        <h3 id="name-environment-identifier">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-environment-identifier" class="section-name selfRef">Environment Identifier</a>
+        </h3>
+<div class="lang-asn.1 sourcecode" id="section-5.4-1">
+<pre>
+EnvID EVIDENCE-CLAIM ::= UTF8String IDENTIFIED BY TBD
+</pre><a href="#section-5.4-1" class="pilcrow">¶</a>
+</div>
+<p id="section-5.4-2">This claim <span class="bcp14">MAY</span> be used to identify a partition within a cryptographic
+device, or a logical environment that spans multiple cryptographic
+devices such as a Security World or a cloud tenant. The format of
+these identifiers will be vendor or environment specific.<a href="#section-5.4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-swID">
+<section id="section-5.5">
+        <h3 id="name-software-identifier">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-software-identifier" class="section-name selfRef">Software Identifier</a>
+        </h3>
+<div class="lang-asn.1 sourcecode" id="section-5.5-1">
+<pre>
+Swname EVIDENCE-CLAIM ::= UTF8String IDENTIFIED BY TBD
+  -- semantics defined in rats-eat-4.2.6
+Swversion EVIDENCE-CLAIM ::= UTF8String IDENTIFIED BY TBD
+  -- semantics defined in rats-eat-4.2.7
+</pre><a href="#section-5.5-1" class="pilcrow">¶</a>
+</div>
+<p id="section-5.5-2"><code>SwName</code> and <code>Swversion</code> together identify the device firmware and
+<span class="bcp14">SHOULD</span> match the way the firmware is identified in relevant
+endorsements, such as published FIPS or Common Criteria certificates.<a href="#section-5.5-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-oemboot">
+<section id="section-5.6">
+        <h3 id="name-oem-boot">
+<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-oem-boot" class="section-name selfRef">OEM Boot</a>
+        </h3>
+<div class="lang-asn.1 sourcecode" id="section-5.6-1">
+<pre>
+Oemboot EVIDENCE-CLAIM ::= BOOLEAN IDENTIFIED BY TBD
+  -- semantics defined in rats-eat-4.2.8
+</pre><a href="#section-5.6-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-dbgstat">
+<section id="section-5.7">
+        <h3 id="name-dbgstat-debug-status">
+<a href="#section-5.7" class="section-number selfRef">5.7. </a><a href="#name-dbgstat-debug-status" class="section-name selfRef">Dbgstat (Debug Status)</a>
+        </h3>
+<p id="section-5.7-1">The "dbgstat" claim applies to entity-wide or submodule-wide debug
+facilities and diagnostic hardware built into chips. It applies to
+any software debug facilities related to privileged software that
+allows system-wide memory inspection, tracing or modification of
+non-system software like user mode applications.<a href="#section-5.7-1" class="pilcrow">¶</a></p>
+<p id="section-5.7-2">See Section 4.2.9 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this
+claim and the semantic of the values in the enumerated list.<a href="#section-5.7-2" class="pilcrow">¶</a></p>
+<p id="section-5.7-3">The dbgstat claim is defined as follows:<a href="#section-5.7-3" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.7-4">
+<pre>
+Dbgstat EVIDENCE-CLAIM ::= CHOICE {
+    enabled                         [0] IMPLICIT NULL,
+    disabled                        [1] IMPLICIT NULL,
+    disabled-Since-Boot             [2] IMPLICIT NULL,
+    disabled-Permanently            [3] IMPLICIT NULL,
+    disabled-Fully-and-Permanently  [4] IMPLICIT NULL
+}
+  -- semantics defined in rats-eat-4.2.9
+</pre><a href="#section-5.7-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-location">
+<section id="section-5.8">
+        <h3 id="name-location">
+<a href="#section-5.8" class="section-number selfRef">5.8. </a><a href="#name-location" class="section-name selfRef">Location</a>
+        </h3>
+<div class="lang-asn.1 sourcecode" id="section-5.8-1">
+<pre>
+Location EVIDENCE-CLAIM ::= ???? IDENTIFIED BY TBD
+  -- semantics defined in rats-eat-4.2.10
+</pre><a href="#section-5.8-1" class="pilcrow">¶</a>
+</div>
+<p id="section-5.8-2">Most HSMs will likely not know their own physical location, but cryptographic modules on mobile devices may.<a href="#section-5.8-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-uptime">
+<section id="section-5.9">
+        <h3 id="name-uptime">
+<a href="#section-5.9" class="section-number selfRef">5.9. </a><a href="#name-uptime" class="section-name selfRef">Uptime</a>
+        </h3>
+<p id="section-5.9-1">The "uptime" claim contains the number of seconds that have elapsed
+since the entity or submodule was last booted.<a href="#section-5.9-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.9-2">
+<pre>
+Uptime EVIDENCE-CLAIM ::= INTEGER IDENTIFIED BY TBD
+  -- semantics defined in rats-eat-4.2.11
+</pre><a href="#section-5.9-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="bootcount-sect-bootcount">
+<section id="section-5.10">
+        <h3 id="name-bootcount-sect-bootcount">
+<a href="#section-5.10" class="section-number selfRef">5.10. </a><a href="#name-bootcount-sect-bootcount" class="section-name selfRef">Bootcount {sect-bootcount}</a>
+        </h3>
+<p id="section-5.10-1">The "bootcount" claim contains a count of the number times the entity
+or submodule has been booted.  Support for this claim requires a
+persistent storage on the device.<a href="#section-5.10-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.10-2">
+<pre>
+Bootcount EVIDENCE-CLAIM ::= INTEGER IDENTIFIER BY TBD
+  -- semantics defined in rats-eat-4.2.12
+</pre><a href="#section-5.10-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-bootseed">
+<section id="section-5.11">
+        <h3 id="name-bootseed">
+<a href="#section-5.11" class="section-number selfRef">5.11. </a><a href="#name-bootseed" class="section-name selfRef">Bootseed</a>
+        </h3>
+<p id="section-5.11-1">The "bootseed" claim contains a value created at system boot time
+that allows differentiation of attestation reports from different
+boot sessions of a particular entity (e.g., a certain UEID).<a href="#section-5.11-1" class="pilcrow">¶</a></p>
+<p id="section-5.11-2">This value is usually public.  It is not a secret and <span class="bcp14">MUST NOT</span> be
+used for any purpose that a secret seed is needed, such as seeding
+a random number generator.<a href="#section-5.11-2" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.11-3">
+<pre>
+Bootseed EVIDENCE-CLAIM ::= BIT STRING IDENTIFIED BY TBD
+  -- semantics defined in rats-eat-4.2.13
+</pre><a href="#section-5.11-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-dloas">
+<section id="section-5.12">
+        <h3 id="name-dloas-digital-letters-of-ap">
+<a href="#section-5.12" class="section-number selfRef">5.12. </a><a href="#name-dloas-digital-letters-of-ap" class="section-name selfRef">dloas (Digital Letters of Approval)</a>
+        </h3>
+<p id="section-5.12-1">The "dloas" claim conveys one or more Digital Letters of Approval
+(DLOAs).  A DLOA is a document that describes a certification
+that an entity has received.  Examples of certifications represented
+by a DLOA include those issued by Global Platform and those based on
+Common Criteria.  The DLOA is unspecific to any particular
+certification type or those issued by any particular organization.<a href="#section-5.12-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.12-2">
+<pre>
+Dloas EVIDENCE-CLAIM ::= SEQUENCE SIZE (1..MAX) OF Dloa
+
+Dloa ::= SEQUENCE IDENTIFIED BY TBD {
+    dloaRegistrar IA5STRING,
+    dloaPlatformLabel UTF8STRING,
+    dloaApplicationLabal [0] IMPLICIT UTF8String OPTIONAL
+}
+  -- semantics defined in rats-eat-4.2.14
+</pre><a href="#section-5.12-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-endorsements">
+<section id="section-5.13">
+        <h3 id="name-endorsements">
+<a href="#section-5.13" class="section-number selfRef">5.13. </a><a href="#name-endorsements" class="section-name selfRef">Endorsements</a>
+        </h3>
+<p id="section-5.13-1">This claim allows referencing third party endorsements; for example
+from the device vendor or a certification such as FIPS or Common
+Criteria. The content <span class="bcp14">MAY</span> be referenced by URI, or placed directly
+inline, but either way, the endorsement content or its URI <span class="bcp14">MUST</span> be
+known by the attester at the time that the evidence is generated.<a href="#section-5.13-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.13-2">
+<pre>
+Endorsements EVIDENCE-CLAIM ::= SEQUENCE SIZE (1..MAX) OF Endorsement
+
+Endorsement ::= CHOICE IDENTIFIED BY TBD {
+    uri     [0] IMPLICIT IA5String,
+    content [1] IMPLICIT OCTET STRING
+}
+</pre><a href="#section-5.13-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.13-3">EDNOTE: this needs a bit of thought about what types of endorsements
+we will likely see, and whether OCTET STRING is the right format.<a href="#section-5.13-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-manifests">
+<section id="section-5.14">
+        <h3 id="name-manifests">
+<a href="#section-5.14" class="section-number selfRef">5.14. </a><a href="#name-manifests" class="section-name selfRef">Manifests</a>
+        </h3>
+<p id="section-5.14-1">TODO -- rats-eat-4.2.15<a href="#section-5.14-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-measurements">
+<section id="section-5.15">
+        <h3 id="name-measurements">
+<a href="#section-5.15" class="section-number selfRef">5.15. </a><a href="#name-measurements" class="section-name selfRef">Measurements</a>
+        </h3>
+<p id="section-5.15-1">TODO -- rats-eat-4.2.16<a href="#section-5.15-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-measres">
+<section id="section-5.16">
+        <h3 id="name-measres-software-measuremen">
+<a href="#section-5.16" class="section-number selfRef">5.16. </a><a href="#name-measres-software-measuremen" class="section-name selfRef">Measres (Software Measurement Results)</a>
+        </h3>
+<p id="section-5.16-1">TODO -- rats-eat-4.2.17<a href="#section-5.16-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-submods">
+<section id="section-5.17">
+        <h3 id="name-submods-submodules">
+<a href="#section-5.17" class="section-number selfRef">5.17. </a><a href="#name-submods-submodules" class="section-name selfRef">Submods (Submodules)</a>
+        </h3>
+<p id="section-5.17-1">TODO -- rats-eat-4.2.18<a href="#section-5.17-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-iat">
+<section id="section-5.18">
+        <h3 id="name-iat-issuance-time">
+<a href="#section-5.18" class="section-number selfRef">5.18. </a><a href="#name-iat-issuance-time" class="section-name selfRef">iat (Issuance Time)</a>
+        </h3>
+<p id="section-5.18-1">The time at which the evidence was created. Here we differ from
+the <code>iat</code> claim in rats-eat-4.3.1 in that we use the PKIX time
+format <code>Time</code> instead of the 64-bit CBOR time structure.<a href="#section-5.18-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.18-2">
+<pre>
+Iat EVIDENCE-CLAIM ::= Time
+</pre><a href="#section-5.18-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.18-3">It is recognized that many HSMs, especially if air-gapped, will
+not have an accurate system clock. If the system is not anticipated
+to have a reliable clock, then this claim <span class="bcp14">SHOULD</span> be omitted and
+the <code>Nonce</code> claim used instead.<a href="#section-5.18-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-intuse">
+<section id="section-5.19">
+        <h3 id="name-intuse-intended-use">
+<a href="#section-5.19" class="section-number selfRef">5.19. </a><a href="#name-intuse-intended-use" class="section-name selfRef">intuse (Intended Use)</a>
+        </h3>
+<div class="lang-asn.1 sourcecode" id="section-5.19-1">
+<pre>
+Intuse EVIDENCE-CLAIM ::= CHOICE IDENTIFIED BY TBD {
+    generic              [1] IMPLICIT NULL,
+    registration         [2] IMPLICIT NULL,
+    provisioning         [3] IMPLICIT NULL,
+    certificateIssuance  [4] IMPLICIT NULL,
+    proofOfPossession    [5] IMPLICIT NULL
+}
+  -- semantics defined in rats-eat-4.3.3
+</pre><a href="#section-5.19-1" class="pilcrow">¶</a>
+</div>
+<p id="section-5.19-2">Note: tags intentionally started at 1 to align with EAT. If the
+IANA registry of intended use claims is extended, then the this
+CHOICE <span class="bcp14">MAY</span> be extended using the same tag values as indicated
+in the EAT registry.<a href="#section-5.19-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-fipsmode">
+<section id="section-5.20">
+        <h3 id="name-fipsmode">
+<a href="#section-5.20" class="section-number selfRef">5.20. </a><a href="#name-fipsmode" class="section-name selfRef">FipsMode</a>
+        </h3>
+<p id="section-5.20-1">The cryptographic module was booted in FIPS mode, including the
+required self-tests and any other requiremnts of its FIPS certificate.<a href="#section-5.20-1" class="pilcrow">¶</a></p>
+<p id="section-5.20-2">Note to verifiers and relying parties: "FIPS Mode" does not imply
+"FIPS Certified". For example, a device may have a FIPS Mode even
+if the device was never submitted for FIPS certification. This
+claim <span class="bcp14">SHOULD</span> only be taken in conjunction with a valid FIPS
+certification for this hardware and software version, and
+appraising any other claims as required by the FIPS certification.<a href="#section-5.20-2" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.20-3">
+<pre>
+FipsMode EVIDENCE-CLAIM ::= BOOLEAN IDENTIFIED BY TBD
+</pre><a href="#section-5.20-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-vendorinfo">
+<section id="section-5.21">
+        <h3 id="name-vendorinfo">
+<a href="#section-5.21" class="section-number selfRef">5.21. </a><a href="#name-vendorinfo" class="section-name selfRef">VendorInfo</a>
+        </h3>
+<p id="section-5.21-1">This claim provides a place for vendor to place propriatary data;
+i.e. any proprietary data that does not fit in any other claim.<a href="#section-5.21-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.21-2">
+<pre>
+VendorInfo ::= TYPE-IDENTIFIER IDENTIFIED BY TBD
+</pre><a href="#section-5.21-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.21-3">Vendors must specify an OID and data type for their VendorInfo,
+and communicate this to verifiers who wish to parse this data.<a href="#section-5.21-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-nestedevidences">
+<section id="section-5.22">
+        <h3 id="name-nestedevidences">
+<a href="#section-5.22" class="section-number selfRef">5.22. </a><a href="#name-nestedevidences" class="section-name selfRef">NestedEvidences</a>
+        </h3>
+<div class="lang-asn.1 sourcecode" id="section-5.22-1">
+<pre>
+NestedEvidences EVIDENCE-CLAIM ::= SEQUENCE OF PkixEvidenceStatement IDENTIFIED BY TBD
+</pre><a href="#section-5.22-1" class="pilcrow">¶</a>
+</div>
+<p id="section-5.22-2">Composite devices may produce multiple signed evidence statements
+that need to be signed in a hiearchical manner. PkixEvidenceStatements
+<span class="bcp14">MAY</span> be nested.<a href="#section-5.22-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-nonce">
+<section id="section-5.23">
+        <h3 id="name-nonce">
+<a href="#section-5.23" class="section-number selfRef">5.23. </a><a href="#name-nonce" class="section-name selfRef">Nonce</a>
+        </h3>
+<p id="section-5.23-1">The "nonce" claim is used to provide freshness.<a href="#section-5.23-1" class="pilcrow">¶</a></p>
+<p id="section-5.23-2">The Nonce claim is used to carry the challenge provided by the caller to
+demonstrate freshness of the generated token. The following constraints
+apply to the nonce-type:<a href="#section-5.23-2" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-5.23-3.1">
+            <p id="section-5.23-3.1.1">The length must be reasonable as it may be processed by end entities with limited resources.
+Therefore, it is <span class="bcp14">RECOMMENDED</span> that the length does not exceed 64 bytes.<a href="#section-5.23-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="compact" id="section-5.23-3.2">
+            <p id="section-5.23-3.2.1">Only a single nonce value is conveyed.<a href="#section-5.23-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.23-4">The nonce claim is defined as follows:<a href="#section-5.23-4" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.23-5">
+<pre>
+Nonce EVIDENCE-CLAIM ::= OCTET STRING IDENTIFIED BY TBD
+</pre><a href="#section-5.23-5" class="pilcrow">¶</a>
+</div>
+<p id="section-5.23-6">See Section 4.1 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for a description of this claim.<a href="#section-5.23-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sect-keyid">
+<section id="section-5.24">
+        <h3 id="name-keyid">
+<a href="#section-5.24" class="section-number selfRef">5.24. </a><a href="#name-keyid" class="section-name selfRef">KeyId</a>
+        </h3>
+<p id="section-5.24-1">An identifier for the subject key. The format <span class="bcp14">MAY</span> be vendor-specific,
+but <span class="bcp14">MUST</span> be an ASCII value (IA5String).<a href="#section-5.24-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.24-2">
+<pre>
+KeyId EVIDENCE-CLAIM ::= IA5String IDENTIFIED BY TBD
+</pre><a href="#section-5.24-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-pubkey">
+<section id="section-5.25">
+        <h3 id="name-pubkey">
+<a href="#section-5.25" class="section-number selfRef">5.25. </a><a href="#name-pubkey" class="section-name selfRef">PubKey</a>
+        </h3>
+<p id="section-5.25-1">The subject public key being attested by this evidence.<a href="#section-5.25-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.25-2">
+<pre>
+PubKey EVIDENCE-CLAIM ::= OCTET STRING IDENTIFIED BY TBD
+</pre><a href="#section-5.25-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-purpose">
+<section id="section-5.26">
+        <h3 id="name-purpose">
+<a href="#section-5.26" class="section-number selfRef">5.26. </a><a href="#name-purpose" class="section-name selfRef">Purpose</a>
+        </h3>
+<p id="section-5.26-1">TODO: align with PKCS#11 Purposes<a href="#section-5.26-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.26-2">
+<pre>
+Purpose EVIDENCE-CLAIM ::= CHOICE IDENTIFIED BY TBD {
+   ... Sign, Decrypt, Unwrap, etc..
+
+}
+</pre><a href="#section-5.26-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-nonexportable">
+<section id="section-5.27">
+        <h3 id="name-nonexportable">
+<a href="#section-5.27" class="section-number selfRef">5.27. </a><a href="#name-nonexportable" class="section-name selfRef">NonExportable</a>
+        </h3>
+<p id="section-5.27-1">TODO align with PKCS#11<a href="#section-5.27-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.27-2">
+<pre>
+NonExportable EVIDENCE-CLAIM ::= BOOLEAN IDENTIFIED BY TBD
+</pre><a href="#section-5.27-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-imported">
+<section id="section-5.28">
+        <h3 id="name-imported">
+<a href="#section-5.28" class="section-number selfRef">5.28. </a><a href="#name-imported" class="section-name selfRef">Imported</a>
+        </h3>
+<p id="section-5.28-1">TODO align with PKCS#11<a href="#section-5.28-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.28-2">
+<pre>
+Imported EVIDENCE-CLAIM ::= BOOLIAN IDENTIFIED BY TBD
+</pre><a href="#section-5.28-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sect-keyexpiry">
+<section id="section-5.29">
+        <h3 id="name-keyexpiry">
+<a href="#section-5.29" class="section-number selfRef">5.29. </a><a href="#name-keyexpiry" class="section-name selfRef">KeyExpiry</a>
+        </h3>
+<p id="section-5.29-1">If the key has a known expiry time or "not after" date.<a href="#section-5.29-1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.29-2">
+<pre>
+KeyExpiry EVIDENCE-CLAIM ::= Time
+</pre><a href="#section-5.29-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="unrecognized-claims">
+<section id="section-5.30">
+        <h3 id="name-unrecognized-claims">
+<a href="#section-5.30" class="section-number selfRef">5.30. </a><a href="#name-unrecognized-claims" class="section-name selfRef">Unrecognized claims</a>
+        </h3>
+<p id="section-5.30-1">This document does not define an exhaustive list of claims. New claims
+may be added in the future, including proprietary ones. As such, parsers
+<span class="bcp14">SHOULD</span> expect to encounter unrecognized claims, and to handle them gracefully.<a href="#section-5.30-1" class="pilcrow">¶</a></p>
+<p id="section-5.30-2">In general, the correct behaviour for a verifier will be to start with an
+appraisal policy of claims to look for, and where appropriate the expected
+values (for example, FipsMode: true), and any additional claims that may be in the
+evidence <span class="bcp14">SHOULD</span> be ignored.<a href="#section-5.30-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="extclaims-extension">
+<section id="section-6">
+      <h2 id="name-evidence-claims-certificate">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-evidence-claims-certificate" class="section-name selfRef">Evidence Claims Certificate Extension</a>
+      </h2>
+<p id="section-6-1">This section specifies the syntax and semantics of the Evidence Claims certificate extension which
+provides a list of claims associated with the certificate subject appraised by the CA.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">The Evidence Claims certificate extension <span class="bcp14">MAY</span> be included in public key certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.
+The Evidence Claims certificate extension <span class="bcp14">MUST</span> be identified by the following object identifier:<a href="#section-6-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6-3">
+<pre>
+     id-pe-evidenceclaims OBJECT IDENTIFIER  ::=
+        { iso(1) identified-organization(3) dod(6) internet(1)
+          security(5) mechanisms(5) pkix(7) id-pe(1) 34 }
+</pre><a href="#section-6-3" class="pilcrow">¶</a>
+</div>
+<p id="section-6-4">This extension <span class="bcp14">MUST NOT</span> be marked critical.<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">The Evidence Claims extension <span class="bcp14">MUST</span> have the following syntax:<a href="#section-6-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6-6">
+<pre>
+EvidenceClaims ::= SET SIZE (1..MAX) OF EVIDENCE-CLAIM
+</pre><a href="#section-6-6" class="pilcrow">¶</a>
+</div>
+<p id="section-6-7">The EvidenceClaims represents an unsigned version of the evidence claims appraised by the CA.
+It <span class="bcp14">MUST</span> contain at least one claim.  For privacy reasons, the CA <span class="bcp14">MAY</span> include only a subset
+of the EvidenceClaims that were presented to it, for example in an EvidenceBundle in a CSR.
+The CA may include in their certificate profile a
+list of verified evidence claims (identified by OID) that <span class="bcp14">MAY</span> be copied from the CSR to
+the certificate, while any other claims <span class="bcp14">MUST NOT</span> be copied.
+By removing the signature from the evidence, the CA is asserting that it has has verified
+the Evidence to chain to a root that the CA trusts, but it is not required to disclose
+in the final certificate what that root is.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<p id="section-6-8">See <a href="#sec-priv-cons" class="auto internal xref">Section 8</a> for a discussion of privacy concerns related to re-publishing
+Evidence into a certificate.<a href="#section-6-8" class="pilcrow">¶</a></p>
+<div id="extclaims-asn">
+<section id="section-6.1">
+        <h3 id="name-asn1-module">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-asn1-module" class="section-name selfRef">ASN.1 Module</a>
+        </h3>
+<p id="section-6.1-1">This section provides an ASN.1 Module <span>[<a href="#X.680" class="cite xref">X.680</a>]</span> for the Evidence Claims
+certificate extension, and it follows the conventions established in
+<span>[<a href="#RFC5912" class="cite xref">RFC5912</a>]</span> and <span>[<a href="#RFC6268" class="cite xref">RFC6268</a>]</span>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<div class="sourcecode" id="section-6.1-2">
+<pre>&lt;CODE BEGINS&gt;
+     EvidenceClaimsCertExtn
+       { iso(1) identified-organization(3) dod(6) internet(1)
+         security(5) mechanisms(5) pkix(7) id-mod(0)
+         id-mod-evidenceclaims(TBD) }
+
+     DEFINITIONS IMPLICIT TAGS ::=
+     BEGIN
+
+     IMPORTS
+       EXTENSION
+       FROM PKIX-CommonTypes-2009  -- RFC 5912
+         { iso(1) identified-organization(3) dod(6) internet(1)
+           security(5) mechanisms(5) pkix(7) id-mod(0)
+           id-mod-pkixCommon-02(57) } ;
+
+     -- Evidence Claims Certificate Extension
+
+     ext-EvidenceClaims EXTENSION ::= {
+       SYNTAX EvidenceClaims
+       IDENTIFIED BY id-pe-evidenceclaims }
+
+     -- EvidenceClaims Certificate Extension OID
+
+     id-pe-evidenceclaims OBJECT IDENTIFIER ::=
+        { iso(1) identified-organization(3) dod(6) internet(1)
+          security(5) mechanisms(5) pkix(7) id-pe(1) 34 }
+
+     -- Evidence Claims Certificate Extension Syntax
+
+     EvidenceClaims ::= SET SIZE (1..MAX) OF EVIDENCE-CLAIM
+
+     END
+
+&lt;CODE ENDS&gt;</pre><a href="#section-6.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="implementation-considerations">
+<section id="section-7">
+      <h2 id="name-implementation-consideratio">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+      </h2>
+<div id="api-for-requesting-evidence-from-an-attesting-device">
+<section id="section-7.1">
+        <h3 id="name-api-for-requesting-evidence">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-api-for-requesting-evidence" class="section-name selfRef">API for requesting evidence from an attesting device</a>
+        </h3>
+<p id="section-7.1-1">While it is strictly outside the scope of this document to specify how a calling application
+can request evidence from a cryptographic device, two modes are suggested.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<div id="request-by-id-and-claim-profile">
+<section id="section-7.1.1">
+          <h4 id="name-request-by-id-and-claim-pro">
+<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-request-by-id-and-claim-pro" class="section-name selfRef">Request by ID and claim profile</a>
+          </h4>
+<p id="section-7.1.1-1">In this mode, the calling application request evidence about a given entity
+-- for example, a given EnvID or a given KeyID -- and the cryptographic device
+assembles a <code>PkixEvidenceStatement</code> containing as many claims as it is able to
+populate. Implementers may have named evidence profiles if it is desirable for
+the cryptographic device to respond with multiple different sets of claims.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="request-by-claim-set">
+<section id="section-7.1.2">
+          <h4 id="name-request-by-claim-set">
+<a href="#section-7.1.2" class="section-number selfRef">7.1.2. </a><a href="#name-request-by-claim-set" class="section-name selfRef">Request by claim set</a>
+          </h4>
+<p id="section-7.1.2-1">In this mode, the calling application pre-constructs a sequence of <code>EVIDENCE-CLAIM</code>
+which is passed in to the attesting device. As a response, the attesting device returns
+a structure of type <code>PkixEvidenceStatement</code> which includes all the expected signatures.<a href="#section-7.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-2">This mode is useful for attesting devices with more resources and used in situations where
+the supported evidence profiles may not be known during implementation.<a href="#section-7.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-3">It is left to the implementer to choose the way that the desired claims are submitted to the
+attesting device, including which types of claims are recognized and how much information is
+provided by the caller.<a href="#section-7.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-4">However, when using this mode:
+- an attesting device <span class="bcp14">MUST</span> reject the production of a <code>PkixEvidenceStatement</code> if any requested
+  claim is not recognized; and,
+- an attesting device <span class="bcp14">MUST</span> reject the production of a <code>PkixEvidenceStatement</code> if any requested
+  claim is not supported by the observed state (claim is deemed false).<a href="#section-7.1.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-5">The use of this mode implies that the attesting device contains the logic necessary to interpret
+and verify the submitted claims.<a href="#section-7.1.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-priv-cons">
+<section id="section-8">
+      <h2 id="name-privacy-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
+      </h2>
+<div id="publishing-evidence-in-a-certificate">
+<section id="section-8.1">
+        <h3 id="name-publishing-evidence-in-a-ce">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-publishing-evidence-in-a-ce" class="section-name selfRef">Publishing Evidence in a certificate</a>
+        </h3>
+<p id="section-8.1-1">The extension <span class="bcp14">MUST NOT</span> publish in the certificate any privacy-sensitive information
+that could compromise the end device. What counts as privacy-sensitive will vary by
+use case. For example, consider a few scenarios:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">First, consider a Hardware Security Module (HSM) backing a public code-signing service.
+The model and firmware patch level could be considered sensitive as it could give an
+attacker an advantage in exploiting known vulnerabilities against un-patched systems.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Second, consider a certificate issued to a end-user mobile computing device,
+any sort of unique identifier could be used as a super-cookie for tracking
+purposes.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">Third, consider small IoT devices such as un-patchable wireless sensors.
+Here there may be no privacy concerns and in fact knowing exact hardware
+and firmware version information could help edge gateways to deny network
+access to devices with known vulnerabilities.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">Beyond that, a CA <span class="bcp14">MUST</span> have a configurable mechanism to control which information
+is to be copied from the provided Evidence into the certificate, for example this
+could be configured within a certificate profile or Certificate Practice Statement
+(CPS) and this must be considered on a case-by-base basis.  To protect end-user
+privacy, CA operators should err on the
+side of caution and exclude information that is not clearly essential for security
+verification by relying parties.  Avoiding unnecessary claims also mitigates the risk
+of targeted attacks, where an
+attacker could exploit knowledge of hardware versions, models, etc.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-cons">
+<section id="section-9">
+      <h2 id="name-security-considerations">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-9-1">This specification re-uses the claims from the EAT specification and
+relies on the security protection offered by digital signatures. This
+digital signature is computed with the Attestation Key available
+on the device, see Section 12.1 of <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> for considerations
+regarding the generation, the use and the protection of these
+Attestation Keys. Since the Attester located at the end entity creates
+the Evidence with claims defined in this document. This document inherits
+the remote attestation architecture described in <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>. With the
+re-use of the claims from <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> the security and privacy
+considerations apply also to this document even though the encoding
+in this specification is different from the encoding of claims
+discussed by <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">Evidence contains information that may be unique to a device
+and may therefore allow to single out an individual device for
+tracking purposes.  Deployments that have privacy requirements must
+take appropriate measures to ensure that claim values can only
+identify a group of devices and that the Attestation Keys are used
+across a number of devices as well.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-3">To verify the Evidence, the primary need is to check the signature and
+the correct encoding of the claims. To produce the Attestation Result,
+the Verifier will use Endorsements, Reference Values, and Appraisal
+Policies. The policies may require that certain claims must be present
+and that their values match registered reference values.  All claims
+may be worthy of additional appraisal.<a href="#section-9-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-10">
+      <h2 id="name-iana-considerations">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-10-1">TBD: OIDs for all the claims listed in this document.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<div id="oids-for-evidence-claims-certificate-extension">
+<section id="section-10.1">
+        <h3 id="name-oids-for-evidence-claims-ce">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-oids-for-evidence-claims-ce" class="section-name selfRef">OIDs for Evidence Claims Certificate Extension</a>
+        </h3>
+<p id="section-10.1-1">For the EvidenceClaims certificate extension in <a href="#extclaims-extension" class="auto internal xref">Section 6</a>,
+IANA is requested to assign an object identifier (OID) for the certificate extension.
+The OID for the certificate extension should be allocated in the "SMI
+Security for PKIX Certificate Extension" registry (1.3.6.1.5.5.7.1).<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-2">For the ASN.1 Module in <a href="#extclaims-asn" class="auto internal xref">Section 6.1</a>, IANA is requested to assign an
+object identifier (OID) for the module identifier.  The OID for the
+module should be allocated in the "SMI Security for PKIX Module
+Identifier" registry (1.3.6.1.5.5.7.0).<a href="#section-10.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<section id="section-11">
+      <h2 id="name-references">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-11.1">
+        <h3 id="name-normative-references">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-rats-eat">[I-D.ietf-rats-eat]</dt>
+        <dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-28</span>, <time datetime="2024-06-25" class="refDate">25 June 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-28">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-28</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5280">[RFC5280]</dt>
+        <dd>
+<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9334">[RFC9334]</dt>
+      <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Thaler, D.</span>, <span class="refAuthor">Richardson, M.</span>, <span class="refAuthor">Smith, N.</span>, and <span class="refAuthor">W. Pan</span>, <span class="refTitle">"Remote ATtestation procedureS (RATS) Architecture"</span>, <span class="seriesInfo">RFC 9334</span>, <span class="seriesInfo">DOI 10.17487/RFC9334</span>, <time datetime="2023-01" class="refDate">January 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9334">https://www.rfc-editor.org/rfc/rfc9334</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-11.2">
+        <h3 id="name-informative-references">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-lamps-csr-attestation">[I-D.ietf-lamps-csr-attestation]</dt>
+        <dd>
+<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-10</span>, <time datetime="2024-07-07" class="refDate">7 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-10">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-10</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2986">[RFC2986]</dt>
+        <dd>
+<span class="refAuthor">Nystrom, M.</span> and <span class="refAuthor">B. Kaliski</span>, <span class="refTitle">"PKCS #10: Certification Request Syntax Specification Version 1.7"</span>, <span class="seriesInfo">RFC 2986</span>, <span class="seriesInfo">DOI 10.17487/RFC2986</span>, <time datetime="2000-11" class="refDate">November 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2986">https://www.rfc-editor.org/rfc/rfc2986</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4211">[RFC4211]</dt>
+        <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate Request Message Format (CRMF)"</span>, <span class="seriesInfo">RFC 4211</span>, <span class="seriesInfo">DOI 10.17487/RFC4211</span>, <time datetime="2005-09" class="refDate">September 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4211">https://www.rfc-editor.org/rfc/rfc4211</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5912">[RFC5912]</dt>
+        <dd>
+<span class="refAuthor">Hoffman, P.</span> and <span class="refAuthor">J. Schaad</span>, <span class="refTitle">"New ASN.1 Modules for the Public Key Infrastructure Using X.509 (PKIX)"</span>, <span class="seriesInfo">RFC 5912</span>, <span class="seriesInfo">DOI 10.17487/RFC5912</span>, <time datetime="2010-06" class="refDate">June 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5912">https://www.rfc-editor.org/rfc/rfc5912</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6268">[RFC6268]</dt>
+        <dd>
+<span class="refAuthor">Schaad, J.</span> and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Additional New ASN.1 Modules for the Cryptographic Message Syntax (CMS) and the Public Key Infrastructure Using X.509 (PKIX)"</span>, <span class="seriesInfo">RFC 6268</span>, <span class="seriesInfo">DOI 10.17487/RFC6268</span>, <time datetime="2011-07" class="refDate">July 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6268">https://www.rfc-editor.org/rfc/rfc6268</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9344">[RFC9344]</dt>
+        <dd>
+<span class="refAuthor">Asaeda, H.</span>, <span class="refAuthor">Ooka, A.</span>, and <span class="refAuthor">X. Shao</span>, <span class="refTitle">"CCNinfo: Discovering Content and Network Information in Content-Centric Networks"</span>, <span class="seriesInfo">RFC 9344</span>, <span class="seriesInfo">DOI 10.17487/RFC9344</span>, <time datetime="2023-02" class="refDate">February 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9344">https://www.rfc-editor.org/rfc/rfc9344</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="X.680">[X.680]</dt>
+      <dd>
+<span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology -- Abstract Syntax Notation One (ASN.1): Specification of basic notation"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.itu.int/rec/T-REC-X.680">https://www.itu.int/rec/T-REC-X.680</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+<div id="acknowledgements">
+<section id="appendix-A">
+      <h2 id="name-acknowledgements">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="appendix-A-1">This specification is the work of a design team created by the chairs
+of the LAMPS working group. This specification has been developed
+based on discussions in that design team.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">The following persons, in no specific order, contributed to the work:
+Richard Kettlewell, Chris Trufan, Bruno Couillard, Jean-Pierre Fiset,
+Sander Temme, Jethro Beekman, Zsolt Rózsahegyi, Ferenc Pető, Mike Agrenius
+Kushner, Tomas Gustavsson, Dieter Bong, Christopher Meyer, Michael StJohns,
+Carl Wallace, Michael Ricardson, Tomofumi Okubo, Olivier Couillard, John
+Gray, Eric Amador, Johnson Darren, Herman Slatman, Tiru Reddy, Thomas
+Fossati, Corey Bonnell, Argenius Kushner, James Hagborg.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="asn1-mod">
+<section id="appendix-B">
+      <h2 id="name-asn1-module-2">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-asn1-module-2" class="section-name selfRef">ASN.1 Module</a>
+      </h2>
+<p id="appendix-B-1">TBD: Full ASN.1 goes in here.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-C">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Mike Ounsworth</span></div>
+<div dir="auto" class="left"><span class="org">Entrust Limited</span></div>
+<div dir="auto" class="left"><span class="street-address">2500 Solandt Road – Suite 100</span></div>
+<div dir="auto" class="left">
+<span class="locality">Ottawa, Ontario</span>  <span class="postal-code">K2K 3G5</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Canada</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:mike.ounsworth@entrust.com" class="email">mike.ounsworth@entrust.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Richard Kettlewell</span></div>
+<div dir="auto" class="left"><span class="org">Entrust Limited</span></div>
+<div dir="auto" class="left"><span class="country-name">United Kingdom</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:Richard.Kettlewell@entrust.com" class="email">Richard.Kettlewell@entrust.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jean-Pierre Fiset</span></div>
+<div dir="auto" class="left"><span class="org">Crypto4A Technologies Inc.</span></div>
+<div dir="auto" class="left"><span class="street-address">1550A Laperriere Ave</span></div>
+<div dir="auto" class="left">
+<span class="locality">Ottawa, Ontario</span>  <span class="postal-code">K1Z 7T2</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Canada</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jp@crypto4a.com" class="email">jp@crypto4a.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Hannes Tschofenig</span></div>
+<div dir="auto" class="left"><span class="org">Siemens</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:Hannes.Tschofenig@gmx.net" class="email">Hannes.Tschofenig@gmx.net</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Tirumaleswar Reddy</span></div>
+<div dir="auto" class="left"><span class="org">Nokia</span></div>
+<div dir="auto" class="left">
+<span class="locality">Bangalore</span> </div>
+<div dir="auto" class="left"><span class="region">Karnataka</span></div>
+<div dir="auto" class="left"><span class="country-name">India</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:kondtir@gmail.com" class="email">kondtir@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Monty Wiseman</span></div>
+<div dir="auto" class="left"><span class="org">Beyond Identity</span></div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:monty.wiseman@beyondidentity.com" class="email">monty.wiseman@beyondidentity.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
