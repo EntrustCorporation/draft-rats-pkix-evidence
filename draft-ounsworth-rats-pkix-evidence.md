@@ -103,6 +103,7 @@ a Verifier.
 
 --- middle
 
+
 # Introduction
 
 Trusted execution environments, like secure elements and hardware security
