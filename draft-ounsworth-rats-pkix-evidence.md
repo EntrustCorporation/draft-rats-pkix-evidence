@@ -153,7 +153,7 @@ CA Browser Forum to convey properties about hardware security models, such
 as non-exportability, which must be enabled for storing publicly-trusted
 code-signing keys. Hence, this specification is supposed to be used with
 the attestation extension for Certificate Signing Requests (CSRs), see
-{{I-D.ietf-lamps-csr-attestation}}. 
+{{I-D.ietf-lamps-csr-attestation}}.
 
 There are, however, other use cases where remote attestation may also be
 used, such as
