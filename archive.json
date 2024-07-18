@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-16T00:04:36.594885+00:00",
+  "timestamp": "2024-07-18T00:04:20.497770+00:00",
   "repo": "EntrustCorporation/draft-rats-pkix-evidence",
   "labels": [
     {
@@ -125,6 +125,22 @@
           "updatedAt": "2024-07-01T14:33:43Z"
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOMB5Mfc6PxUxv",
+      "title": "The ASN.1 you're looking for",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/5",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "draft-ounsworth-rats-pkix-evidence-00 says:\r\n\r\n   CertHash ::= SEQUENCE {\r\n       hash AlgorithmIdentifier,\r\n       value OCTET STRING\r\n   }\r\n   -- There is bound to already exist an ASN.1 structure for this somewhere.\r\n\r\n---\r\n\r\nRFC 5126:\r\n \r\nESSCertIDv2 ::= SEQUENCE {\r\n     hashAlgorithm           AlgorithmIdentifier\r\n        --    DEFAULT {algorithm id-sha256} --,\r\n     certHash                Hash,\r\n     issuerSerial            IssuerSerial OPTIONAL\r\n}\r\n \r\nRuss\r\n",
+      "createdAt": "2024-07-16T21:27:26Z",
+      "updatedAt": "2024-07-16T21:27:26Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
