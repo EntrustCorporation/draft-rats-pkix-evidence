@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-23T00:04:42.041843+00:00",
+  "timestamp": "2024-07-25T00:04:36.806255+00:00",
   "repo": "EntrustCorporation/draft-rats-pkix-evidence",
   "labels": [
     {
@@ -139,6 +139,54 @@
       "body": "draft-ounsworth-rats-pkix-evidence-00 says:\r\n\r\n   CertHash ::= SEQUENCE {\r\n       hash AlgorithmIdentifier,\r\n       value OCTET STRING\r\n   }\r\n   -- There is bound to already exist an ASN.1 structure for this somewhere.\r\n\r\n---\r\n\r\nRFC 5126:\r\n \r\nESSCertIDv2 ::= SEQUENCE {\r\n     hashAlgorithm           AlgorithmIdentifier\r\n        --    DEFAULT {algorithm id-sha256} --,\r\n     certHash                Hash,\r\n     issuerSerial            IssuerSerial OPTIONAL\r\n}\r\n \r\nRuss\r\n",
       "createdAt": "2024-07-16T21:27:26Z",
       "updatedAt": "2024-07-16T21:27:26Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOMB5Mfc6Qt6vI",
+      "title": "Add a definition for hwserial",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/6",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "It's missing a section",
+      "createdAt": "2024-07-24T15:58:21Z",
+      "updatedAt": "2024-07-24T15:58:21Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOMB5Mfc6Qt_a7",
+      "title": "Add an appendix with the list of new claims that are not in EAT",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/7",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-24T16:07:23Z",
+      "updatedAt": "2024-07-24T16:07:23Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOMB5Mfc6QuGVx",
+      "title": "Change \"fipsmode\" to \"fipsboot\"",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/8",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I think that would help clarity.",
+      "createdAt": "2024-07-24T16:21:47Z",
+      "updatedAt": "2024-07-24T16:21:47Z",
       "closedAt": null,
       "comments": []
     }
