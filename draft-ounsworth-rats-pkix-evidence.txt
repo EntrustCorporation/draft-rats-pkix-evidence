@@ -5,7 +5,7 @@
 RATS                                                        M. Ounsworth
 Internet-Draft                                             R. Kettlewell
 Intended status: Standards Track                                 Entrust
-Expires: 9 January 2025                                              JPF
+Expires: 30 January 2025                                     J. P. Fiset
                                                                 Crypto4A
                                                            H. Tschofenig
                                                                  Siemens
@@ -13,7 +13,7 @@ Expires: 9 January 2025                                              JPF
                                                                    Nokia
                                                               M. Wiseman
                                                          Beyond Identity
-                                                             8 July 2024
+                                                            29 July 2024
 
 
                      PKI-based Attestation Evidence
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 January 2025.
+   This Internet-Draft will expire on 30 January 2025.
 
 Copyright Notice
 
@@ -982,9 +982,9 @@ Table of Contents
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-28, 25 June
+              Progress, Internet-Draft, draft-ietf-rats-eat-29, 8 July
               2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              rats-eat-28>.
+              rats-eat-29>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
