@@ -45,7 +45,7 @@ author:
     country: United Kingdom
     email: Richard.Kettlewell@entrust.com
   -
-    ins: JPF
+    ins: J.P. Fiset
     name: Jean-Pierre Fiset
     organization: Crypto4A Technologies Inc.
     abbrev: Crypto4A
