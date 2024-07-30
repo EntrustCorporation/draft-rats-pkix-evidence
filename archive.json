@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-28T00:05:05.061269+00:00",
+  "timestamp": "2024-07-30T00:04:33.794774+00:00",
   "repo": "EntrustCorporation/draft-rats-pkix-evidence",
   "labels": [
     {
@@ -189,6 +189,62 @@
       "updatedAt": "2024-07-24T16:21:47Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOMB5Mfc6RMF01",
+      "title": "SEQUENCE vs SET of CLAIM",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/9",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The core question is whether / how to handle multiple copies of each claim.",
+      "createdAt": "2024-07-29T16:35:42Z",
+      "updatedAt": "2024-07-29T16:35:42Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOMB5Mfc6RMH24",
+      "title": "CMS-lite vs CMS-profile vs full CMS",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/10",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We have three design options:\r\n\r\n1. \"CMS-lite\": We define new ASN.1 structures which are similar to CMS, but not actually CMS.\r\n\r\n2. \"CMS-profile\": We define which features of CMS we are allowing to be used here.\r\n\r\n3. \"Full CMS\": all present and future features of CMS are allowed here.",
+      "createdAt": "2024-07-29T16:40:41Z",
+      "updatedAt": "2024-07-29T16:40:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 11,
+      "id": "I_kwDOMB5Mfc6RMTPm",
+      "title": "Add a section on cert profile",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/11",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We should add a section that describes what CA/RAs are supposed to do with this attestation data. IE we expect that any sort of evidence can be carried in a CSR, and the CA/RA is expected to apply its cert policy / CPS to decide if this evidence meets the bar for issuing this certificate.",
+      "createdAt": "2024-07-29T17:05:05Z",
+      "updatedAt": "2024-07-29T18:02:01Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It seems that description combines the verifier and RP roles in the CA. It would be nice if both roles are described separately. For example the CA forwards evidence to an internal Verifier that returns an attestation result. Th CA then determines whether to issue a certificate based on the Attestation Results. \n\nIn a more complex use case, an RA might embed the Verifier and the Attestation Results flow to the CA...",
+          "createdAt": "2024-07-29T18:01:59Z",
+          "updatedAt": "2024-07-29T18:01:59Z"
+        }
+      ]
     }
   ],
   "pulls": [
