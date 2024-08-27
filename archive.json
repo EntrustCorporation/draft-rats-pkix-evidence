@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-25T00:05:01.204418+00:00",
+  "timestamp": "2024-08-27T00:04:39.575426+00:00",
   "repo": "EntrustCorporation/draft-rats-pkix-evidence",
   "labels": [
     {
@@ -214,13 +214,23 @@
       "state": "OPEN",
       "author": "ounsworth",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "jpfiset"
+      ],
       "labels": [],
       "body": "We have three design options:\r\n\r\n1. \"CMS-lite\": We define new ASN.1 structures which are similar to CMS, but not actually CMS.\r\n\r\n2. \"CMS-profile\": We define which features of CMS we are allowing to be used here.\r\n\r\n3. \"Full CMS\": all present and future features of CMS are allowed here.",
       "createdAt": "2024-07-29T16:40:41Z",
-      "updatedAt": "2024-07-29T16:40:41Z",
+      "updatedAt": "2024-08-26T16:56:31Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "hannestschofenig",
+          "authorAssociation": "COLLABORATOR",
+          "body": "JP to write a summary",
+          "createdAt": "2024-08-26T16:56:30Z",
+          "updatedAt": "2024-08-26T16:56:30Z"
+        }
+      ]
     },
     {
       "number": 11,
