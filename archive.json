@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-03T00:04:43.469202+00:00",
+  "timestamp": "2024-09-05T00:04:40.103157+00:00",
   "repo": "EntrustCorporation/draft-rats-pkix-evidence",
   "labels": [
     {
@@ -255,6 +255,22 @@
           "updatedAt": "2024-07-29T18:01:59Z"
         }
       ]
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOMB5Mfc6VWpB7",
+      "title": "Richard Kettlewell feedback",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/12",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "That seems like a good start.\r\n \r\nI think it needs some concrete statements about how this works in practice.\r\n \r\nIt's hard to see how a collection of key claims is tied back to a root CA. Our HSMs already have an internal certificate hierarchy and this is going to get deeper with the introduction of multi-tenancy. The full hierarchy might, hypothetically, look something like:\r\n \r\n  root CA -(1)-> factory CA -(2)-> physical HSM master signing key -(3)-> tenant master key -(4)-> tenant per-initialization key -(5)-> application key\r\n \r\nIn principle it could be even deeper than that. Other vendors might not have the same structure and of course the details are up for discussion (quite possibly we don't need per-initialization keys for this use case), but I would expect there to be some kind of certificate hierarchy in most cases.\r\n \r\nWe should be able to say what each of the certificates 1-5 look like, where you find the verifying key, etc.\r\n \r\nMy guesses:\r\n \r\n1 could be an ordinary X.509 certificate conveyed in relatedCertificates.\r\n2 is a PkixEvidenceStatement containing platform claims about the physical HSM (including the HSM master signing key)\r\n3 is a PkixEvidenceStatement containing platform claims about the tenant - but how do we get the signing key? We can't include 2 in relatedCertificates because it's not an RFC5280 Certificate.\r\n4 seems like it should also be a PkixEvidenceStatement containing platform claims about the per-initialization key but we have the same question about how the signing key is conveyed, same issue with relatedCertificates as above.\r\n5 is obviously a PkixEvidenceStatement containing key claims but where does the verifying key come from in practice? same issues as 3, 4.",
+      "createdAt": "2024-09-04T15:50:12Z",
+      "updatedAt": "2024-09-04T15:50:12Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
