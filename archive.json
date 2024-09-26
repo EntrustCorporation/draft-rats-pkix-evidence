@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-24T00:05:00.108175+00:00",
+  "timestamp": "2024-09-26T00:04:45.659661+00:00",
   "repo": "EntrustCorporation/draft-rats-pkix-evidence",
   "labels": [
     {
@@ -271,6 +271,30 @@
       "updatedAt": "2024-09-04T15:50:12Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOMB5Mfc6XvmFz",
+      "title": "Remove NestedEvidences and just use EAT submods",
+      "url": "https://github.com/EntrustCorporation/draft-rats-pkix-evidence/issues/13",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I believe that what I have in there as \"NestedEvidences\" is identical in spirit to EAT submods, so we just need to flesh out the submods claim and remove NestedEvidences.",
+      "createdAt": "2024-09-24T16:18:36Z",
+      "updatedAt": "2024-09-24T16:49:43Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "nedmsmith",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> \"NestedEvidences\"\r\n\r\nRFC9334 describes \"layered attester\" which could be realized by DICE layering, TCG \"trust chain\" extended into PCRs, EAT submods, etc. There was a discussion early on about how sophisticated HSMs actually are. Are they roots-of-trust where the entire HSM is considered to be both Attesting Environment and Target Envronment or is there a layering aspect? \r\n\r\nIf HSMs are considered roots of trust, then the use of nested evidence / submods is actually describing multiple elements within the environment rather than describing different environments.",
+          "createdAt": "2024-09-24T16:47:08Z",
+          "updatedAt": "2024-09-24T16:49:43Z"
+        }
+      ]
     }
   ],
   "pulls": [
