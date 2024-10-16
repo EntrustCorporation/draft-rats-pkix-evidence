@@ -1,7 +1,7 @@
 ---
 title: PKI-based Attestation Evidence
 abbrev: PKI-based Attestation Evidence
-docname: draft-ounsworth-rats-pkix-evidence-latest
+docname: draft-ietf-rats-pkix-evidence-latest
 category: std
 consensus: true
 submissiontype: IETF
@@ -56,7 +56,8 @@ author:
     email: jp@crypto4a.com
   -
     name: Hannes Tschofenig
-    organization: Siemens
+    organization: University of Applied Sciences Bonn-Rhein-Siegx
+    abbrev: H-BRS
     email: Hannes.Tschofenig@gmx.net
   -
     fullname: Tirumaleswar Reddy
