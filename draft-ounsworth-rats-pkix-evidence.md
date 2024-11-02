@@ -168,7 +168,7 @@ used, such as
 
 - A manufacturer needs to provision configuration info, software, and credentials to a device from remote. With the help of remote attestation the manufacturer is provided enough information to verify that information is only sent to devices it has built.
 
-- Two devices are establishing keys to perform secure exchange of information such as clustering. As part of the establishment, an attestation message is provided to ensure that the keys and policies relating to those keys are respecting the requirements for the proposed exchange.
+- Two HSM devices are establishing keys to perform secure exchange of information to establish a high availability cluster. As part of the establishment, an attestation message is sent between the devices to report on keys and policies. This allows the devices to confirm the origin of the keys and verify that policies are respected such a FIPS mode and other similar details.
 
 # Conventions and Definitions
 
